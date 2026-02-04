@@ -10,7 +10,7 @@ namespace TaskFlow
         private DateTime _dueDate;
         private bool _isCompleted;
         private bool _isImportant;
-        private DateTime _createdDate;
+        private DateTime _createdDate = DateTime.Now;
         private string _notes;
 
         public string Title
@@ -32,6 +32,8 @@ namespace TaskFlow
         }
 
         public string DueTime => DueDate.ToString("HH:mm");
+
+        public string DueDateFormatted => DueDate.ToString("dd.MM.yyyy");
 
         public bool IsCompleted
         {

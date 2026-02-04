@@ -6,47 +6,48 @@
         private System.Windows.Forms.Panel panelLeft;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Panel panelRight;
-        private System.Windows.Forms.TextBox textBoxNewTask;
         private System.Windows.Forms.Label labelView;
         private System.Windows.Forms.Button buttonListView;
         private System.Windows.Forms.Button buttonCardsView;
-        private System.Windows.Forms.GroupBox groupBoxTomorrow;
-        private System.Windows.Forms.Label labelTomorrow;
-        private System.Windows.Forms.Label labelTomorrowCount;
         private System.Windows.Forms.GroupBox groupBoxDayAfter;
-        private System.Windows.Forms.Label labelDayAfter;
         private System.Windows.Forms.Label labelDayAfterCount;
-        private System.Windows.Forms.GroupBox groupBoxWednesday;
-        private System.Windows.Forms.Label labelWednesday;
-        private System.Windows.Forms.Label labelWednesdayCount;
+        private System.Windows.Forms.Label labelDayAfter;
+        private System.Windows.Forms.GroupBox groupBoxTomorrow;
+        private System.Windows.Forms.Label labelTomorrowCount;
+        private System.Windows.Forms.Label labelTomorrow;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem menuItemAccount;
         private System.Windows.Forms.ToolStripMenuItem menuItemTheme;
         private System.Windows.Forms.ToolStripMenuItem menuItemLightTheme;
         private System.Windows.Forms.ToolStripMenuItem menuItemDarkTheme;
         private System.Windows.Forms.ToolStripMenuItem menuItemSettings;
+        private System.Windows.Forms.Button buttonAddTask;
         private System.Windows.Forms.ListBox listBoxActiveTasks;
         private System.Windows.Forms.GroupBox groupBoxCompleted;
         private System.Windows.Forms.ListBox listBoxCompletedTasks;
-        private System.Windows.Forms.Button buttonAddTask;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonComplete;
+        private System.Windows.Forms.Panel panelTaskCards;
+        private System.Windows.Forms.Label labelTodayDate;
+        private System.Windows.Forms.Panel panelTaskDetails;
         private System.Windows.Forms.Label labelTaskTitle;
         private System.Windows.Forms.Label labelTaskDescription;
         private System.Windows.Forms.Label labelDueTime;
         private System.Windows.Forms.Label labelCreatedTime;
         private System.Windows.Forms.TextBox textBoxNotes;
-        private System.Windows.Forms.DateTimePicker dateTimePickerDueDate;
-        private System.Windows.Forms.DateTimePicker dateTimePickerDueTime;
         private System.Windows.Forms.Button buttonImportant;
         private System.Windows.Forms.Label labelDate19;
         private System.Windows.Forms.Label labelDate20;
         private System.Windows.Forms.Label labelDate21;
         private System.Windows.Forms.Label labelDate22;
         private System.Windows.Forms.Label labelDate23;
-        private System.Windows.Forms.Panel panelTaskCards;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.Panel panelNoTaskSelected;
+        private System.Windows.Forms.Label labelNoTaskSelected;
+        private System.Windows.Forms.Label labelDateFull;
+        private System.Windows.Forms.Label labelTimeFull;
+        private System.Windows.Forms.Button buttonEditTask;
 
         protected override void Dispose(bool disposing)
         {
@@ -61,9 +62,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.panelLeft = new System.Windows.Forms.Panel();
-            this.groupBoxWednesday = new System.Windows.Forms.GroupBox();
-            this.labelWednesdayCount = new System.Windows.Forms.Label();
-            this.labelWednesday = new System.Windows.Forms.Label();
             this.groupBoxDayAfter = new System.Windows.Forms.GroupBox();
             this.labelDayAfterCount = new System.Windows.Forms.Label();
             this.labelDayAfter = new System.Windows.Forms.Label();
@@ -80,22 +78,26 @@
             this.menuItemDarkTheme = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.panelMain = new System.Windows.Forms.Panel();
-            this.panelTaskCards = new System.Windows.Forms.Panel();
-            this.groupBoxCompleted = new System.Windows.Forms.GroupBox();
-            this.listBoxCompletedTasks = new System.Windows.Forms.ListBox();
+            this.buttonEditTask = new System.Windows.Forms.Button();
             this.buttonComplete = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonAddTask = new System.Windows.Forms.Button();
+            this.panelTaskCards = new System.Windows.Forms.Panel();
+            this.labelTodayDate = new System.Windows.Forms.Label();
+            this.groupBoxCompleted = new System.Windows.Forms.GroupBox();
+            this.listBoxCompletedTasks = new System.Windows.Forms.ListBox();
             this.listBoxActiveTasks = new System.Windows.Forms.ListBox();
-            this.textBoxNewTask = new System.Windows.Forms.TextBox();
             this.panelRight = new System.Windows.Forms.Panel();
+            this.panelNoTaskSelected = new System.Windows.Forms.Panel();
+            this.labelNoTaskSelected = new System.Windows.Forms.Label();
+            this.panelTaskDetails = new System.Windows.Forms.Panel();
+            this.labelTimeFull = new System.Windows.Forms.Label();
+            this.labelDateFull = new System.Windows.Forms.Label();
             this.textBoxNotes = new System.Windows.Forms.TextBox();
             this.labelCreatedTime = new System.Windows.Forms.Label();
             this.labelDueTime = new System.Windows.Forms.Label();
             this.labelTaskDescription = new System.Windows.Forms.Label();
             this.labelTaskTitle = new System.Windows.Forms.Label();
-            this.dateTimePickerDueDate = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePickerDueTime = new System.Windows.Forms.DateTimePicker();
             this.buttonImportant = new System.Windows.Forms.Button();
             this.labelDate23 = new System.Windows.Forms.Label();
             this.labelDate22 = new System.Windows.Forms.Label();
@@ -105,13 +107,14 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panelLeft.SuspendLayout();
-            this.groupBoxWednesday.SuspendLayout();
             this.groupBoxDayAfter.SuspendLayout();
             this.groupBoxTomorrow.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.groupBoxCompleted.SuspendLayout();
             this.panelRight.SuspendLayout();
+            this.panelNoTaskSelected.SuspendLayout();
+            this.panelTaskDetails.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,7 +122,6 @@
             // 
             this.panelLeft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
             this.panelLeft.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelLeft.Controls.Add(this.groupBoxWednesday);
             this.panelLeft.Controls.Add(this.groupBoxDayAfter);
             this.panelLeft.Controls.Add(this.groupBoxTomorrow);
             this.panelLeft.Controls.Add(this.buttonCardsView);
@@ -131,37 +133,6 @@
             this.panelLeft.Name = "panelLeft";
             this.panelLeft.Size = new System.Drawing.Size(250, 600);
             this.panelLeft.TabIndex = 0;
-            // 
-            // groupBoxWednesday
-            // 
-            this.groupBoxWednesday.Controls.Add(this.labelWednesdayCount);
-            this.groupBoxWednesday.Controls.Add(this.labelWednesday);
-            this.groupBoxWednesday.Location = new System.Drawing.Point(15, 300);
-            this.groupBoxWednesday.Name = "groupBoxWednesday";
-            this.groupBoxWednesday.Size = new System.Drawing.Size(220, 80);
-            this.groupBoxWednesday.TabIndex = 6;
-            this.groupBoxWednesday.TabStop = false;
-            // 
-            // labelWednesdayCount
-            // 
-            this.labelWednesdayCount.AutoSize = true;
-            this.labelWednesdayCount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.labelWednesdayCount.ForeColor = System.Drawing.Color.Gray;
-            this.labelWednesdayCount.Location = new System.Drawing.Point(10, 40);
-            this.labelWednesdayCount.Name = "labelWednesdayCount";
-            this.labelWednesdayCount.Size = new System.Drawing.Size(52, 15);
-            this.labelWednesdayCount.TabIndex = 1;
-            this.labelWednesdayCount.Text = "задачи";
-            // 
-            // labelWednesday
-            // 
-            this.labelWednesday.AutoSize = true;
-            this.labelWednesday.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelWednesday.Location = new System.Drawing.Point(10, 20);
-            this.labelWednesday.Name = "labelWednesday";
-            this.labelWednesday.Size = new System.Drawing.Size(120, 19);
-            this.labelWednesday.TabIndex = 0;
-            this.labelWednesday.Text = "среда, 21 января";
             // 
             // groupBoxDayAfter
             // 
@@ -180,9 +151,9 @@
             this.labelDayAfterCount.ForeColor = System.Drawing.Color.Gray;
             this.labelDayAfterCount.Location = new System.Drawing.Point(10, 40);
             this.labelDayAfterCount.Name = "labelDayAfterCount";
-            this.labelDayAfterCount.Size = new System.Drawing.Size(100, 15);
+            this.labelDayAfterCount.Size = new System.Drawing.Size(52, 15);
             this.labelDayAfterCount.TabIndex = 1;
-            this.labelDayAfterCount.Text = "10 задач, 2 важных";
+            this.labelDayAfterCount.Text = "0 задач";
             // 
             // labelDayAfter
             // 
@@ -190,9 +161,9 @@
             this.labelDayAfter.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelDayAfter.Location = new System.Drawing.Point(10, 20);
             this.labelDayAfter.Name = "labelDayAfter";
-            this.labelDayAfter.Size = new System.Drawing.Size(155, 19);
+            this.labelDayAfter.Size = new System.Drawing.Size(135, 19);
             this.labelDayAfter.TabIndex = 0;
-            this.labelDayAfter.Text = "Послезавтра, 23 января";
+            this.labelDayAfter.Text = "Послезавтра, ...";
             // 
             // groupBoxTomorrow
             // 
@@ -213,7 +184,7 @@
             this.labelTomorrowCount.Name = "labelTomorrowCount";
             this.labelTomorrowCount.Size = new System.Drawing.Size(52, 15);
             this.labelTomorrowCount.TabIndex = 1;
-            this.labelTomorrowCount.Text = "12 задач";
+            this.labelTomorrowCount.Text = "0 задач";
             // 
             // labelTomorrow
             // 
@@ -221,9 +192,9 @@
             this.labelTomorrow.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelTomorrow.Location = new System.Drawing.Point(10, 20);
             this.labelTomorrow.Name = "labelTomorrow";
-            this.labelTomorrow.Size = new System.Drawing.Size(120, 19);
+            this.labelTomorrow.Size = new System.Drawing.Size(89, 19);
             this.labelTomorrow.TabIndex = 0;
-            this.labelTomorrow.Text = "Завтра, 22 января";
+            this.labelTomorrow.Text = "Завтра, ...";
             // 
             // buttonCardsView
             // 
@@ -307,13 +278,14 @@
             // 
             this.panelMain.BackColor = System.Drawing.Color.White;
             this.panelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelMain.Controls.Add(this.panelTaskCards);
-            this.panelMain.Controls.Add(this.groupBoxCompleted);
+            this.panelMain.Controls.Add(this.buttonEditTask);
             this.panelMain.Controls.Add(this.buttonComplete);
             this.panelMain.Controls.Add(this.buttonDelete);
             this.panelMain.Controls.Add(this.buttonAddTask);
+            this.panelMain.Controls.Add(this.panelTaskCards);
+            this.panelMain.Controls.Add(this.labelTodayDate);
+            this.panelMain.Controls.Add(this.groupBoxCompleted);
             this.panelMain.Controls.Add(this.listBoxActiveTasks);
-            this.panelMain.Controls.Add(this.textBoxNewTask);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(250, 0);
             this.panelMain.Name = "panelMain";
@@ -321,21 +293,67 @@
             this.panelMain.Size = new System.Drawing.Size(550, 600);
             this.panelMain.TabIndex = 1;
             // 
+            // buttonEditTask
+            // 
+            this.buttonEditTask.Location = new System.Drawing.Point(65, 570);
+            this.buttonEditTask.Name = "buttonEditTask";
+            this.buttonEditTask.Size = new System.Drawing.Size(100, 30);
+            this.buttonEditTask.TabIndex = 12;
+            this.buttonEditTask.Text = "Редактировать";
+            this.buttonEditTask.UseVisualStyleBackColor = true;
+            // 
+            // buttonComplete
+            // 
+            this.buttonComplete.Location = new System.Drawing.Point(425, 570);
+            this.buttonComplete.Name = "buttonComplete";
+            this.buttonComplete.Size = new System.Drawing.Size(100, 30);
+            this.buttonComplete.TabIndex = 11;
+            this.buttonComplete.Text = "Выполнить";
+            this.buttonComplete.UseVisualStyleBackColor = true;
+            // 
+            // buttonDelete
+            // 
+            this.buttonDelete.Location = new System.Drawing.Point(305, 570);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(100, 30);
+            this.buttonDelete.TabIndex = 10;
+            this.buttonDelete.Text = "Удалить";
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            // 
+            // buttonAddTask
+            // 
+            this.buttonAddTask.Location = new System.Drawing.Point(185, 570);
+            this.buttonAddTask.Name = "buttonAddTask";
+            this.buttonAddTask.Size = new System.Drawing.Size(100, 30);
+            this.buttonAddTask.TabIndex = 9;
+            this.buttonAddTask.Text = "Добавить +";
+            this.buttonAddTask.UseVisualStyleBackColor = true;
+            // 
             // panelTaskCards
             // 
             this.panelTaskCards.AutoScroll = true;
-            this.panelTaskCards.Location = new System.Drawing.Point(23, 103);
+            this.panelTaskCards.Location = new System.Drawing.Point(23, 60);
             this.panelTaskCards.Name = "panelTaskCards";
-            this.panelTaskCards.Size = new System.Drawing.Size(502, 250);
+            this.panelTaskCards.Size = new System.Drawing.Size(502, 260);
             this.panelTaskCards.TabIndex = 7;
             this.panelTaskCards.Visible = false;
+            // 
+            // labelTodayDate
+            // 
+            this.labelTodayDate.AutoSize = true;
+            this.labelTodayDate.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.labelTodayDate.Location = new System.Drawing.Point(23, 23);
+            this.labelTodayDate.Name = "labelTodayDate";
+            this.labelTodayDate.Size = new System.Drawing.Size(158, 25);
+            this.labelTodayDate.TabIndex = 8;
+            this.labelTodayDate.Text = "среда, 4 февраля";
             // 
             // groupBoxCompleted
             // 
             this.groupBoxCompleted.Controls.Add(this.listBoxCompletedTasks);
-            this.groupBoxCompleted.Location = new System.Drawing.Point(23, 380);
+            this.groupBoxCompleted.Location = new System.Drawing.Point(23, 340);
             this.groupBoxCompleted.Name = "groupBoxCompleted";
-            this.groupBoxCompleted.Size = new System.Drawing.Size(502, 190);
+            this.groupBoxCompleted.Size = new System.Drawing.Size(502, 220);
             this.groupBoxCompleted.TabIndex = 6;
             this.groupBoxCompleted.TabStop = false;
             this.groupBoxCompleted.Text = "Выполненные задачи";
@@ -347,67 +365,24 @@
             this.listBoxCompletedTasks.ItemHeight = 15;
             this.listBoxCompletedTasks.Location = new System.Drawing.Point(3, 19);
             this.listBoxCompletedTasks.Name = "listBoxCompletedTasks";
-            this.listBoxCompletedTasks.Size = new System.Drawing.Size(496, 168);
+            this.listBoxCompletedTasks.Size = new System.Drawing.Size(496, 198);
             this.listBoxCompletedTasks.TabIndex = 0;
-            // 
-            // buttonComplete
-            // 
-            this.buttonComplete.Location = new System.Drawing.Point(370, 60);
-            this.buttonComplete.Name = "buttonComplete";
-            this.buttonComplete.Size = new System.Drawing.Size(100, 30);
-            this.buttonComplete.TabIndex = 5;
-            this.buttonComplete.Text = "Выполнить";
-            this.buttonComplete.UseVisualStyleBackColor = true;
-            // 
-            // buttonDelete
-            // 
-            this.buttonDelete.Location = new System.Drawing.Point(250, 60);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(100, 30);
-            this.buttonDelete.TabIndex = 4;
-            this.buttonDelete.Text = "Удалить";
-            this.buttonDelete.UseVisualStyleBackColor = true;
-            // 
-            // buttonAddTask
-            // 
-            this.buttonAddTask.Location = new System.Drawing.Point(130, 60);
-            this.buttonAddTask.Name = "buttonAddTask";
-            this.buttonAddTask.Size = new System.Drawing.Size(100, 30);
-            this.buttonAddTask.TabIndex = 3;
-            this.buttonAddTask.Text = "Добавить";
-            this.buttonAddTask.UseVisualStyleBackColor = true;
             // 
             // listBoxActiveTasks
             // 
             this.listBoxActiveTasks.FormattingEnabled = true;
             this.listBoxActiveTasks.ItemHeight = 15;
-            this.listBoxActiveTasks.Location = new System.Drawing.Point(23, 103);
+            this.listBoxActiveTasks.Location = new System.Drawing.Point(23, 60);
             this.listBoxActiveTasks.Name = "listBoxActiveTasks";
             this.listBoxActiveTasks.Size = new System.Drawing.Size(502, 259);
             this.listBoxActiveTasks.TabIndex = 2;
-            // 
-            // textBoxNewTask
-            // 
-            this.textBoxNewTask.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBoxNewTask.ForeColor = System.Drawing.Color.Gray;
-            this.textBoxNewTask.Location = new System.Drawing.Point(23, 23);
-            this.textBoxNewTask.Name = "textBoxNewTask";
-            this.textBoxNewTask.Size = new System.Drawing.Size(502, 25);
-            this.textBoxNewTask.TabIndex = 1;
-            this.textBoxNewTask.Text = "введите текст задачи";
             // 
             // panelRight
             // 
             this.panelRight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(245)))), ((int)(((byte)(245)))));
             this.panelRight.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelRight.Controls.Add(this.textBoxNotes);
-            this.panelRight.Controls.Add(this.labelCreatedTime);
-            this.panelRight.Controls.Add(this.labelDueTime);
-            this.panelRight.Controls.Add(this.labelTaskDescription);
-            this.panelRight.Controls.Add(this.labelTaskTitle);
-            this.panelRight.Controls.Add(this.dateTimePickerDueDate);
-            this.panelRight.Controls.Add(this.dateTimePickerDueTime);
-            this.panelRight.Controls.Add(this.buttonImportant);
+            this.panelRight.Controls.Add(this.panelNoTaskSelected);
+            this.panelRight.Controls.Add(this.panelTaskDetails);
             this.panelRight.Controls.Add(this.labelDate23);
             this.panelRight.Controls.Add(this.labelDate22);
             this.panelRight.Controls.Add(this.labelDate21);
@@ -420,76 +395,129 @@
             this.panelRight.Size = new System.Drawing.Size(300, 600);
             this.panelRight.TabIndex = 2;
             // 
+            // panelNoTaskSelected
+            // 
+            this.panelNoTaskSelected.Controls.Add(this.labelNoTaskSelected);
+            this.panelNoTaskSelected.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelNoTaskSelected.Location = new System.Drawing.Point(20, 20);
+            this.panelNoTaskSelected.Name = "panelNoTaskSelected";
+            this.panelNoTaskSelected.Size = new System.Drawing.Size(258, 558);
+            this.panelNoTaskSelected.TabIndex = 14;
+            this.panelNoTaskSelected.Visible = true;
+            // 
+            // labelNoTaskSelected
+            // 
+            this.labelNoTaskSelected.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelNoTaskSelected.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelNoTaskSelected.ForeColor = System.Drawing.Color.Gray;
+            this.labelNoTaskSelected.Location = new System.Drawing.Point(0, 0);
+            this.labelNoTaskSelected.Name = "labelNoTaskSelected";
+            this.labelNoTaskSelected.Size = new System.Drawing.Size(258, 558);
+            this.labelNoTaskSelected.TabIndex = 0;
+            this.labelNoTaskSelected.Text = "Выберите задачу";
+            this.labelNoTaskSelected.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panelTaskDetails
+            // 
+            this.panelTaskDetails.Controls.Add(this.labelTimeFull);
+            this.panelTaskDetails.Controls.Add(this.labelDateFull);
+            this.panelTaskDetails.Controls.Add(this.textBoxNotes);
+            this.panelTaskDetails.Controls.Add(this.labelCreatedTime);
+            this.panelTaskDetails.Controls.Add(this.labelDueTime);
+            this.panelTaskDetails.Controls.Add(this.labelTaskDescription);
+            this.panelTaskDetails.Controls.Add(this.labelTaskTitle);
+            this.panelTaskDetails.Controls.Add(this.buttonImportant);
+            this.panelTaskDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelTaskDetails.Location = new System.Drawing.Point(20, 20);
+            this.panelTaskDetails.Name = "panelTaskDetails";
+            this.panelTaskDetails.Size = new System.Drawing.Size(258, 558);
+            this.panelTaskDetails.TabIndex = 13;
+            this.panelTaskDetails.Visible = false;
+            // 
+            // labelTimeFull
+            // 
+            this.labelTimeFull.AutoSize = true;
+            this.labelTimeFull.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelTimeFull.ForeColor = System.Drawing.Color.Gray;
+            this.labelTimeFull.Location = new System.Drawing.Point(3, 180);
+            this.labelTimeFull.Name = "labelTimeFull";
+            this.labelTimeFull.Size = new System.Drawing.Size(52, 15);
+            this.labelTimeFull.TabIndex = 15;
+            this.labelTimeFull.Text = "13:08:05";
+            // 
+            // labelDateFull
+            // 
+            this.labelDateFull.AutoSize = true;
+            this.labelDateFull.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelDateFull.ForeColor = System.Drawing.Color.Gray;
+            this.labelDateFull.Location = new System.Drawing.Point(3, 160);
+            this.labelDateFull.Name = "labelDateFull";
+            this.labelDateFull.Size = new System.Drawing.Size(81, 15);
+            this.labelDateFull.TabIndex = 14;
+            this.labelDateFull.Text = "5 февраля 2022";
+            // 
             // textBoxNotes
             // 
-            this.textBoxNotes.Location = new System.Drawing.Point(23, 350);
+            this.textBoxNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxNotes.BackColor = System.Drawing.Color.White;
+            this.textBoxNotes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxNotes.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBoxNotes.Location = new System.Drawing.Point(3, 230);
             this.textBoxNotes.Multiline = true;
             this.textBoxNotes.Name = "textBoxNotes";
+            this.textBoxNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxNotes.Size = new System.Drawing.Size(252, 150);
             this.textBoxNotes.TabIndex = 12;
-            this.textBoxNotes.Text = "текст\r\nтекст";
+            this.textBoxNotes.Text = "Заметки к задаче...";
             // 
             // labelCreatedTime
             // 
             this.labelCreatedTime.AutoSize = true;
-            this.labelCreatedTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelCreatedTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelCreatedTime.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreatedTime.Location = new System.Drawing.Point(23, 250);
+            this.labelCreatedTime.Location = new System.Drawing.Point(3, 120);
             this.labelCreatedTime.Name = "labelCreatedTime";
-            this.labelCreatedTime.Size = new System.Drawing.Size(78, 15);
+            this.labelCreatedTime.Size = new System.Drawing.Size(90, 15);
             this.labelCreatedTime.TabIndex = 11;
-            this.labelCreatedTime.Text = "создана в 10:21";
+            this.labelCreatedTime.Text = "СОЗДАНА В 13:08";
             // 
             // labelDueTime
             // 
             this.labelDueTime.AutoSize = true;
-            this.labelDueTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelDueTime.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.labelDueTime.ForeColor = System.Drawing.Color.Gray;
-            this.labelDueTime.Location = new System.Drawing.Point(23, 200);
+            this.labelDueTime.Location = new System.Drawing.Point(3, 80);
             this.labelDueTime.Name = "labelDueTime";
-            this.labelDueTime.Size = new System.Drawing.Size(93, 15);
+            this.labelDueTime.Size = new System.Drawing.Size(134, 19);
             this.labelDueTime.TabIndex = 10;
-            this.labelDueTime.Text = "выполнить до 17:30";
+            this.labelDueTime.Text = "ВЫПОЛНИТЬ ДО 13:08";
             // 
             // labelTaskDescription
             // 
             this.labelTaskDescription.AutoSize = true;
-            this.labelTaskDescription.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelTaskDescription.Location = new System.Drawing.Point(23, 150);
+            this.labelTaskDescription.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelTaskDescription.ForeColor = System.Drawing.Color.Gray;
+            this.labelTaskDescription.Location = new System.Drawing.Point(3, 45);
             this.labelTaskDescription.Name = "labelTaskDescription";
-            this.labelTaskDescription.Size = new System.Drawing.Size(122, 19);
+            this.labelTaskDescription.Size = new System.Drawing.Size(79, 15);
             this.labelTaskDescription.TabIndex = 9;
-            this.labelTaskDescription.Text = "подтекст задачи";
+            this.labelTaskDescription.Text = "Описание задачи";
             // 
             // labelTaskTitle
             // 
             this.labelTaskTitle.AutoSize = true;
-            this.labelTaskTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelTaskTitle.Location = new System.Drawing.Point(23, 100);
+            this.labelTaskTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelTaskTitle.Location = new System.Drawing.Point(3, 10);
+            this.labelTaskTitle.MaximumSize = new System.Drawing.Size(250, 0);
             this.labelTaskTitle.Name = "labelTaskTitle";
-            this.labelTaskTitle.Size = new System.Drawing.Size(125, 25);
+            this.labelTaskTitle.Size = new System.Drawing.Size(98, 30);
             this.labelTaskTitle.TabIndex = 8;
-            this.labelTaskTitle.Text = "Текст задачи";
-            // 
-            // dateTimePickerDueDate
-            // 
-            this.dateTimePickerDueDate.Location = new System.Drawing.Point(23, 280);
-            this.dateTimePickerDueDate.Name = "dateTimePickerDueDate";
-            this.dateTimePickerDueDate.Size = new System.Drawing.Size(120, 23);
-            this.dateTimePickerDueDate.TabIndex = 7;
-            // 
-            // dateTimePickerDueTime
-            // 
-            this.dateTimePickerDueTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dateTimePickerDueTime.Location = new System.Drawing.Point(155, 280);
-            this.dateTimePickerDueTime.Name = "dateTimePickerDueTime";
-            this.dateTimePickerDueTime.ShowUpDown = true;
-            this.dateTimePickerDueTime.Size = new System.Drawing.Size(120, 23);
-            this.dateTimePickerDueTime.TabIndex = 6;
+            this.labelTaskTitle.Text = "ФИЛЬМЫ";
             // 
             // buttonImportant
             // 
-            this.buttonImportant.Location = new System.Drawing.Point(180, 150);
+            this.buttonImportant.Location = new System.Drawing.Point(160, 40);
             this.buttonImportant.Name = "buttonImportant";
             this.buttonImportant.Size = new System.Drawing.Size(95, 30);
             this.buttonImportant.TabIndex = 5;
@@ -580,8 +608,6 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.panelLeft.ResumeLayout(false);
             this.panelLeft.PerformLayout();
-            this.groupBoxWednesday.ResumeLayout(false);
-            this.groupBoxWednesday.PerformLayout();
             this.groupBoxDayAfter.ResumeLayout(false);
             this.groupBoxDayAfter.PerformLayout();
             this.groupBoxTomorrow.ResumeLayout(false);
@@ -593,6 +619,9 @@
             this.groupBoxCompleted.ResumeLayout(false);
             this.panelRight.ResumeLayout(false);
             this.panelRight.PerformLayout();
+            this.panelNoTaskSelected.ResumeLayout(false);
+            this.panelTaskDetails.ResumeLayout(false);
+            this.panelTaskDetails.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);

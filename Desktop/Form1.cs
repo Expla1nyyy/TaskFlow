@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -20,7 +19,8 @@ namespace TaskFlow
             InitializeComponent();
             InitializeData();
             SetupEventHandlers();
-            LoadSampleData();
+            UpdateUIWithCurrentDate();
+            ShowNoTaskSelected();
         }
 
         private void InitializeData()
@@ -28,150 +28,95 @@ namespace TaskFlow
             activeTasks = new BindingList<TaskModel>();
             completedTasks = new BindingList<TaskModel>();
 
-            // Привязка данных к ListBox
             listBoxActiveTasks.DataSource = activeTasks;
             listBoxActiveTasks.DisplayMember = "Title";
 
             listBoxCompletedTasks.DataSource = completedTasks;
             listBoxCompletedTasks.DisplayMember = "Title";
 
-            // Настройка внешнего вида
             UpdateViewButtons();
             UpdateTheme();
         }
 
-        private void LoadSampleData()
-        {
-            // Активные задачи
-            activeTasks.Add(new TaskModel
-            {
-                Title = "Подготовить отчет по проекту",
-                Description = "Еженедельный отчет для руководства",
-                DueDate = DateTime.Today.AddHours(17.5),
-                CreatedDate = DateTime.Today.AddHours(10),
-                IsImportant = true,
-                Notes = "Не забыть про финансовые показатели"
-            });
-
-            activeTasks.Add(new TaskModel
-            {
-                Title = "Встреча с командой разработки",
-                Description = "Обсуждение новых фич и багов",
-                DueDate = DateTime.Today.AddHours(18.33),
-                CreatedDate = DateTime.Today.AddHours(11),
-                IsImportant = true,
-                Notes = "Подготовить список вопросов"
-            });
-
-            activeTasks.Add(new TaskModel
-            {
-                Title = "Проверить почту",
-                Description = "Ответить на важные письма",
-                DueDate = DateTime.Today.AddHours(18.67),
-                CreatedDate = DateTime.Today.AddHours(9),
-                IsImportant = false,
-                Notes = "Особое внимание письмам от клиентов"
-            });
-
-            // Выполненные задачи
-            completedTasks.Add(new TaskModel
-            {
-                Title = "Позвонить клиенту",
-                Description = "Обсудить условия договора",
-                DueDate = DateTime.Today.AddHours(14),
-                CreatedDate = DateTime.Today.AddHours(8),
-                IsCompleted = true,
-                IsImportant = false,
-                Notes = "Клиент согласен на условия"
-            });
-
-            completedTasks.Add(new TaskModel
-            {
-                Title = "Отправить документы",
-                Description = "Отправить скан документов в бухгалтерию",
-                DueDate = DateTime.Today.AddHours(15),
-                CreatedDate = DateTime.Today.AddHours(10),
-                IsCompleted = true,
-                IsImportant = true,
-                Notes = "Документы отправлены, ждем подтверждения"
-            });
-
-            UpdateTaskCounters();
-        }
-
         private void SetupEventHandlers()
         {
-            // Текстовое поле для новой задачи
-            textBoxNewTask.KeyDown += TextBoxNewTask_KeyDown;
-            textBoxNewTask.Enter += TextBoxNewTask_Enter;
-            textBoxNewTask.Leave += TextBoxNewTask_Leave;
-
-            // Кнопки
             buttonAddTask.Click += ButtonAddTask_Click;
             buttonDelete.Click += ButtonDelete_Click;
             buttonComplete.Click += ButtonComplete_Click;
+            buttonEditTask.Click += ButtonEditTask_Click;
             buttonListView.Click += ButtonListView_Click;
             buttonCardsView.Click += ButtonCardsView_Click;
 
-            // ListBox
             listBoxActiveTasks.SelectedIndexChanged += ListBoxTasks_SelectedIndexChanged;
             listBoxCompletedTasks.SelectedIndexChanged += ListBoxTasks_SelectedIndexChanged;
 
-            // Меню
             menuItemAccount.Click += MenuItemAccount_Click;
             menuItemLightTheme.Click += MenuItemLightTheme_Click;
             menuItemDarkTheme.Click += MenuItemDarkTheme_Click;
             menuItemSettings.Click += MenuItemSettings_Click;
 
-            // Датапикеры
-            dateTimePickerDueDate.ValueChanged += DateTimePickerDueDate_ValueChanged;
-            dateTimePickerDueTime.ValueChanged += DateTimePickerDueTime_ValueChanged;
-
-            // Заметки
             textBoxNotes.TextChanged += TextBoxNotes_TextChanged;
+            buttonImportant.Click += ButtonImportant_Click;
         }
-
-        #region Обработчики событий
 
         private void Form1_Load(object sender, EventArgs e)
         {
             UpdateDateNavigation();
-            if (listBoxActiveTasks.Items.Count > 0)
-            {
-                listBoxActiveTasks.SelectedIndex = 0;
-            }
-        }
-
-        private void TextBoxNewTask_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && !string.IsNullOrWhiteSpace(textBoxNewTask.Text))
-            {
-                AddNewTask();
-                e.Handled = e.SuppressKeyPress = true;
-            }
-        }
-
-        private void TextBoxNewTask_Enter(object sender, EventArgs e)
-        {
-            if (textBoxNewTask.Text == "введите текст задачи")
-            {
-                textBoxNewTask.Text = "";
-                textBoxNewTask.ForeColor = isDarkTheme ? Color.White : Color.Black;
-            }
-        }
-
-        private void TextBoxNewTask_Leave(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(textBoxNewTask.Text))
-            {
-                textBoxNewTask.Text = "введите текст задачи";
-                textBoxNewTask.ForeColor = Color.Gray;
-            }
+            UpdateTaskCounters();
+            ShowNoTaskSelected();
         }
 
         private void ButtonAddTask_Click(object sender, EventArgs e)
         {
-            AddNewTask();
+            using (var formEditTask = new FormEditTask())
+            {
+                if (formEditTask.ShowDialog() == DialogResult.OK)
+                {
+                    var newTask = formEditTask.EditedTask;
+                    activeTasks.Add(newTask);
+                    listBoxActiveTasks.SelectedItem = newTask;
+                    UpdateTaskCounters();
+                    UpdateTaskCards();
+                    UpdateStatus($"Задача добавлена: {newTask.Title}");
+                }
+            }
+        }
+
+        private void ButtonEditTask_Click(object sender, EventArgs e)
+        {
+            if (selectedTask != null)
+            {
+                using (var formEditTask = new FormEditTask(selectedTask))
+                {
+                    if (formEditTask.ShowDialog() == DialogResult.OK)
+                    {
+                        var editedTask = formEditTask.EditedTask;
+
+                        // Обновляем задачу в коллекции
+                        if (activeTasks.Contains(selectedTask))
+                        {
+                            int index = activeTasks.IndexOf(selectedTask);
+                            activeTasks[index] = editedTask;
+                        }
+                        else if (completedTasks.Contains(selectedTask))
+                        {
+                            int index = completedTasks.IndexOf(selectedTask);
+                            completedTasks[index] = editedTask;
+                        }
+
+                        selectedTask = editedTask;
+                        DisplayTaskDetails(editedTask);
+                        UpdateTaskCounters();
+                        UpdateTaskCards();
+                        UpdateStatus($"Задача обновлена: {editedTask.Title}");
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите задачу для редактирования", "Редактирование",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void ButtonDelete_Click(object sender, EventArgs e)
@@ -191,7 +136,6 @@ namespace TaskFlow
             buttonCardsView.BackColor = isDarkTheme ? Color.FromArgb(64, 64, 64) : SystemColors.Control;
             buttonCardsView.ForeColor = isDarkTheme ? Color.White : Color.Black;
 
-            // Логика переключения вида
             panelTaskCards.Visible = false;
             listBoxActiveTasks.Visible = true;
             UpdateStatus("Вид изменен на список");
@@ -204,7 +148,6 @@ namespace TaskFlow
             buttonListView.BackColor = isDarkTheme ? Color.FromArgb(64, 64, 64) : SystemColors.Control;
             buttonListView.ForeColor = isDarkTheme ? Color.White : Color.Black;
 
-            // Логика переключения вида
             panelTaskCards.Visible = true;
             listBoxActiveTasks.Visible = false;
             UpdateTaskCards();
@@ -218,6 +161,10 @@ namespace TaskFlow
             {
                 selectedTask = task;
                 DisplayTaskDetails(task);
+            }
+            else
+            {
+                ShowNoTaskSelected();
             }
         }
 
@@ -251,27 +198,6 @@ namespace TaskFlow
                 "Настройки", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void DateTimePickerDueDate_ValueChanged(object sender, EventArgs e)
-        {
-            if (selectedTask != null)
-            {
-                var newDate = dateTimePickerDueDate.Value.Date;
-                var time = dateTimePickerDueTime.Value.TimeOfDay;
-                selectedTask.DueDate = newDate.Add(time);
-                UpdateTaskCounters();
-            }
-        }
-
-        private void DateTimePickerDueTime_ValueChanged(object sender, EventArgs e)
-        {
-            if (selectedTask != null)
-            {
-                var date = dateTimePickerDueDate.Value.Date;
-                var newTime = dateTimePickerDueTime.Value.TimeOfDay;
-                selectedTask.DueDate = date.Add(newTime);
-            }
-        }
-
         private void TextBoxNotes_TextChanged(object sender, EventArgs e)
         {
             if (selectedTask != null)
@@ -286,41 +212,25 @@ namespace TaskFlow
             {
                 selectedTask.IsImportant = !selectedTask.IsImportant;
                 DisplayTaskDetails(selectedTask);
+                UpdateTaskCards();
                 UpdateStatus($"Задача отмечена как {(selectedTask.IsImportant ? "важная" : "обычная")}");
             }
         }
 
-        #endregion
-
-        #region Методы работы с задачами
-
-        private void AddNewTask()
+        private void CompleteSelectedTask()
         {
-            var taskText = textBoxNewTask.Text.Trim();
-            if (string.IsNullOrWhiteSpace(taskText) || taskText == "введите текст задачи")
+            if (selectedTask != null && activeTasks.Contains(selectedTask))
             {
-                return;
+                selectedTask.IsCompleted = true;
+                activeTasks.Remove(selectedTask);
+                completedTasks.Insert(0, selectedTask);
+
+                ShowNoTaskSelected();
+                UpdateTaskCounters();
+                UpdateTaskCards();
+
+                UpdateStatus($"Задача выполнена: {selectedTask.Title}");
             }
-
-            var newTask = new TaskModel
-            {
-                Title = taskText,
-                Description = "Описание задачи",
-                DueDate = DateTime.Today.AddDays(1).AddHours(17),
-                CreatedDate = DateTime.Now,
-                IsImportant = false,
-                Notes = "Заметки к задаче"
-            };
-
-            activeTasks.Add(newTask);
-            textBoxNewTask.Clear();
-            textBoxNewTask.Focus();
-
-            listBoxActiveTasks.SelectedItem = newTask;
-            UpdateTaskCounters();
-            UpdateTaskCards();
-
-            UpdateStatus($"Задача добавлена: {taskText}");
         }
 
         private void DeleteSelectedTask()
@@ -339,7 +249,7 @@ namespace TaskFlow
                 }
 
                 selectedTask = null;
-                ClearTaskDetails();
+                ShowNoTaskSelected();
                 UpdateTaskCounters();
                 UpdateTaskCards();
 
@@ -347,70 +257,69 @@ namespace TaskFlow
             }
         }
 
-        private void CompleteSelectedTask()
-        {
-            if (selectedTask != null && activeTasks.Contains(selectedTask))
-            {
-                selectedTask.IsCompleted = true;
-                activeTasks.Remove(selectedTask);
-                completedTasks.Insert(0, selectedTask);
-
-                ClearTaskDetails();
-                UpdateTaskCounters();
-                UpdateTaskCards();
-
-                UpdateStatus($"Задача выполнена: {selectedTask.Title}");
-            }
-        }
-
         private void DisplayTaskDetails(TaskModel task)
         {
-            if (task == null) return;
+            if (task == null)
+            {
+                ShowNoTaskSelected();
+                return;
+            }
 
-            // Основная информация
-            labelTaskTitle.Text = task.Title;
+            // Показать панель с деталями задачи
+            panelNoTaskSelected.Visible = false;
+            panelTaskDetails.Visible = true;
+
+            string displayTitle = task.Title;
+            if (displayTitle.Length > 50)
+            {
+                displayTitle = displayTitle.Substring(0, 47) + "...";
+            }
+
+            // Новый стиль отображения как в примере
+            labelTaskTitle.Text = displayTitle.ToUpper(); // Большие буквы как заголовок
             labelTaskDescription.Text = task.Description;
-            labelDueTime.Text = $"выполнить до {task.DueTime}";
-            labelCreatedTime.Text = $"создана в {task.CreatedTime}";
+            labelDueTime.Text = $"ВЫПОЛНИТЬ ДО {task.DueTime}";
+            labelCreatedTime.Text = $"СОЗДАНА В {task.CreatedTime}";
 
-            // Дата и время
-            dateTimePickerDueDate.Value = task.DueDate;
-            dateTimePickerDueTime.Value = DateTime.Today.Add(task.DueDate.TimeOfDay);
+            // Форматированная дата
+            labelDateFull.Text = task.CreatedDate.ToString("d MMMM yyyy");
+            labelTimeFull.Text = task.CreatedDate.ToString("HH:mm:ss");
 
-            // Заметки
             textBoxNotes.Text = task.Notes;
 
-            // Важность
             buttonImportant.Text = task.IsImportant ? "★ Важная" : "☆ Обычная";
             buttonImportant.BackColor = task.IsImportant ? Color.Gold : SystemColors.Control;
 
-            // Обновить навигацию по датам
             UpdateDateNavigation(task.DueDate);
         }
 
-        private void ClearTaskDetails()
+        private void ShowNoTaskSelected()
         {
-            labelTaskTitle.Text = "Текст задачи";
-            labelTaskDescription.Text = "подтекст задачи";
-            labelDueTime.Text = "выполнить до 17:30";
-            labelCreatedTime.Text = "создана в 10:21";
-            textBoxNotes.Text = "текст\nтекст";
-            buttonImportant.Text = "☆ Обычная";
-            buttonImportant.BackColor = SystemColors.Control;
+            // Скрыть панель с деталями, показать сообщение
+            panelTaskDetails.Visible = false;
+            panelNoTaskSelected.Visible = true;
+
+            // Обновить навигацию по датам (без выбранной даты)
+            UpdateDateNavigation();
         }
 
         private void UpdateTaskCounters()
         {
-            var tomorrow = DateTime.Today.AddDays(1);
-            var dayAfterTomorrow = DateTime.Today.AddDays(2);
+            var today = DateTime.Today;
+            var tomorrow = today.AddDays(1);
+            var dayAfterTomorrow = today.AddDays(2);
 
+            // Задачи на завтра
             var tomorrowCount = activeTasks.Count(t => t.DueDate.Date == tomorrow);
+            var tomorrowImportant = activeTasks.Count(t => t.DueDate.Date == tomorrow && t.IsImportant);
+            labelTomorrowCount.Text = $"{tomorrowCount} задач" +
+                (tomorrowImportant > 0 ? $", {tomorrowImportant} важных" : "");
+
+            // Задачи на послезавтра
             var dayAfterCount = activeTasks.Count(t => t.DueDate.Date == dayAfterTomorrow);
             var dayAfterImportant = activeTasks.Count(t => t.DueDate.Date == dayAfterTomorrow && t.IsImportant);
-
-            labelTomorrowCount.Text = $"{tomorrowCount} задач";
-            labelDayAfterCount.Text = $"{dayAfterCount} задач, {dayAfterImportant} важных";
-            labelWednesdayCount.Text = $"задач: {activeTasks.Count}";
+            labelDayAfterCount.Text = $"{dayAfterCount} задач" +
+                (dayAfterImportant > 0 ? $", {dayAfterImportant} важных" : "");
         }
 
         private void UpdateTaskCards()
@@ -425,26 +334,47 @@ namespace TaskFlow
                 panelTaskCards.Controls.Add(card);
                 y += card.Height + 10;
             }
+
+            if (activeTasks.Count == 0)
+            {
+                var label = new Label
+                {
+                    Text = "Нет активных задач\nНажмите кнопку '+' чтобы добавить",
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Dock = DockStyle.Fill,
+                    Font = new Font("Segoe UI", 11, FontStyle.Italic),
+                    ForeColor = Color.Gray
+                };
+                panelTaskCards.Controls.Add(label);
+            }
         }
 
         private Panel CreateTaskCard(TaskModel task)
         {
             var panel = new Panel
             {
-                Width = panelTaskCards.Width - 20,
-                Height = 80,
+                Width = panelTaskCards.Width - 25,
+                Height = 100,
                 BackColor = isDarkTheme ? Color.FromArgb(50, 50, 50) : Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Padding = new Padding(15)
+                Padding = new Padding(15),
+                Tag = task
             };
+
+            string title = task.Title;
+            if (title.Length > 40)
+            {
+                title = title.Substring(0, 37) + "...";
+            }
 
             var titleLabel = new Label
             {
-                Text = task.Title,
+                Text = title,
                 Font = new Font("Segoe UI", 10, FontStyle.Regular),
                 ForeColor = isDarkTheme ? Color.White : Color.Black,
                 Location = new Point(10, 10),
-                AutoSize = true
+                AutoSize = true,
+                MaximumSize = new Size(panel.Width - 100, 0)
             };
 
             var timeLabel = new Label
@@ -452,24 +382,48 @@ namespace TaskFlow
                 Text = $"до {task.DueTime}",
                 Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 ForeColor = Color.Gray,
-                Location = new Point(10, 35),
+                Location = new Point(10, 40),
                 AutoSize = true
             };
 
-            var importantLabel = task.IsImportant ? new Label
+            var completeButton = new Button
             {
-                Text = "★",
+                Text = "✓",
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                ForeColor = Color.Gold,
-                Location = new Point(panel.Width - 40, 10),
-                AutoSize = true
-            } : null;
+                ForeColor = Color.Green,
+                BackColor = isDarkTheme ? Color.FromArgb(70, 70, 70) : Color.LightGreen,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(40, 40),
+                Location = new Point(panel.Width - 160, 25),
+                Tag = task
+            };
+            completeButton.FlatAppearance.BorderSize = 0;
+            completeButton.Click += (s, e) =>
+            {
+                if (completeButton.Tag is TaskModel cardTask)
+                {
+                    selectedTask = cardTask;
+                    CompleteSelectedTask();
+                }
+            };
+
+            if (task.IsImportant)
+            {
+                var importantLabel = new Label
+                {
+                    Text = "★ Важная",
+                    Font = new Font("Segoe UI", 9, FontStyle.Bold),
+                    ForeColor = Color.Gold,
+                    Location = new Point(panel.Width - 110, 35),
+                    AutoSize = true
+                };
+                panel.Controls.Add(importantLabel);
+            }
 
             panel.Controls.Add(titleLabel);
             panel.Controls.Add(timeLabel);
-            if (importantLabel != null) panel.Controls.Add(importantLabel);
+            panel.Controls.Add(completeButton);
 
-            // Двойной щелчок для выбора задачи
             panel.DoubleClick += (s, e) =>
             {
                 selectedTask = task;
@@ -479,20 +433,40 @@ namespace TaskFlow
             return panel;
         }
 
-        #endregion
+        private void UpdateUIWithCurrentDate()
+        {
+            var today = DateTime.Today;
+            labelTodayDate.Text = today.ToString("dddd, d MMMM");
 
-        #region Методы обновления UI
+            // Обновление только завтра и послезавтра
+            labelTomorrow.Text = $"Завтра, {today.AddDays(1):d MMMM}";
+            labelDayAfter.Text = $"Послезавтра, {today.AddDays(2):d MMMM}";
+        }
 
         private void UpdateDateNavigation(DateTime? selectedDate = null)
         {
-            var dates = new[] { 19, 20, 21, 22, 23 }; // Дни января из макета
+            var today = DateTime.Today;
+            var dates = new[]
+            {
+                today.AddDays(-2),
+                today.AddDays(-1),
+                today,
+                today.AddDays(1),
+                today.AddDays(2)
+            };
+
             var labels = new[] { labelDate19, labelDate20, labelDate21, labelDate22, labelDate23 };
 
             for (int i = 0; i < labels.Length; i++)
             {
-                labels[i].Text = $"{dates[i]} янв.";
+                labels[i].Text = dates[i].ToString("d MMM");
 
-                if (selectedDate.HasValue && selectedDate.Value.Day == dates[i])
+                if (selectedDate.HasValue && selectedDate.Value.Date == dates[i].Date)
+                {
+                    labels[i].ForeColor = Color.FromArgb(33, 150, 243);
+                    labels[i].Font = new Font(labels[i].Font, FontStyle.Bold);
+                }
+                else if (dates[i].Date == today.Date)
                 {
                     labels[i].ForeColor = Color.FromArgb(33, 150, 243);
                     labels[i].Font = new Font(labels[i].Font, FontStyle.Bold);
@@ -517,29 +491,27 @@ namespace TaskFlow
         {
             if (isDarkTheme)
             {
-                // Темная тема
                 this.BackColor = Color.FromArgb(45, 45, 45);
                 panelLeft.BackColor = Color.FromArgb(30, 30, 30);
                 panelMain.BackColor = Color.FromArgb(50, 50, 50);
                 panelRight.BackColor = Color.FromArgb(30, 30, 30);
 
-                // Обновить цвета текста
                 UpdateControlColors(this, Color.White);
-                textBoxNewTask.BackColor = Color.FromArgb(64, 64, 64);
                 textBoxNotes.BackColor = Color.FromArgb(64, 64, 64);
+                panelNoTaskSelected.BackColor = Color.FromArgb(30, 30, 30);
+                panelTaskDetails.BackColor = Color.FromArgb(30, 30, 30);
             }
             else
             {
-                // Светлая тема
                 this.BackColor = SystemColors.Control;
                 panelLeft.BackColor = Color.FromArgb(245, 245, 245);
                 panelMain.BackColor = Color.White;
                 panelRight.BackColor = Color.FromArgb(245, 245, 245);
 
-                // Обновить цвета текста
                 UpdateControlColors(this, Color.Black);
-                textBoxNewTask.BackColor = Color.White;
                 textBoxNotes.BackColor = Color.White;
+                panelNoTaskSelected.BackColor = Color.FromArgb(245, 245, 245);
+                panelTaskDetails.BackColor = Color.FromArgb(245, 245, 245);
             }
 
             UpdateViewButtons();
@@ -555,7 +527,7 @@ namespace TaskFlow
                     ctrl.ForeColor = textColor;
                 }
 
-                if (ctrl is TextBox textBox && textBox != textBoxNewTask && textBox != textBoxNotes)
+                if (ctrl is TextBox textBox && textBox != textBoxNotes)
                 {
                     textBox.ForeColor = textColor;
                     textBox.BackColor = control.BackColor;
@@ -567,22 +539,17 @@ namespace TaskFlow
 
         private void UpdateStatus(string message)
         {
-            toolStripStatusLabel.Text = message;
+            toolStripStatusLabel.Text = $"{DateTime.Now:HH:mm:ss} - {message}";
         }
-
-        #endregion
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Сохранение данных
             SaveData();
             base.OnFormClosing(e);
         }
 
         private void SaveData()
         {
-            // Здесь будет логика сохранения задач
-            // Например, в файл или базу данных
             UpdateStatus("Данные сохранены");
         }
     }
