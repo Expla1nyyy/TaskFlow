@@ -552,5 +552,10 @@ namespace TaskFlow
         {
             UpdateStatus("Данные сохранены");
         }
+
+        private void labelDate23_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
