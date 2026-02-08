@@ -1,0 +1,96 @@
+<Window x:Class="TaskFlow.EditTaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Добавить/Редактировать задачу"
+        Height="500" Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+	<Window.Resources>
+		<Style TargetType="TextBlock">
+			<Setter Property="Margin" Value="0,0,0,5"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+		</Style>
+
+		<Style TargetType="TextBox">
+			<Setter Property="Margin" Value="0,0,0,15"/>
+			<Setter Property="Padding" Value="5"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="#E0E0E0"/>
+		</Style>
+
+		<Style TargetType="Button">
+			<Setter Property="Padding" Value="10,5"/>
+			<Setter Property="Margin" Value="5,0,0,0"/>
+		</Style>
+	</Window.Resources>
+
+	<Grid Margin="15">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Название задачи -->
+		<TextBlock Grid.Row="0" Text="Название задачи:"/>
+		<TextBox Grid.Row="1" x:Name="txtTitle" Text=""/>
+
+		<!-- Описание -->
+		<TextBlock Grid.Row="2" Text="Описание:"/>
+		<TextBox Grid.Row="3" x:Name="txtDescription"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 Height="60"/>
+
+		<!-- Срок выполнения -->
+		<TextBlock Grid.Row="4" Text="Срок выполнения:"/>
+		<StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,15">
+			<DatePicker x:Name="datePicker" Width="150" Margin="0,0,10,0" Height="142"/>
+			<ComboBox x:Name="cmbTime" Width="100">
+				<ComboBoxItem Content="08:00"/>
+				<ComboBoxItem Content="09:00"/>
+				<ComboBoxItem Content="10:00"/>
+				<ComboBoxItem Content="11:00"/>
+				<ComboBoxItem Content="12:00"/>
+				<ComboBoxItem Content="13:00"/>
+				<ComboBoxItem Content="14:00"/>
+				<ComboBoxItem Content="15:00"/>
+				<ComboBoxItem Content="16:00"/>
+				<ComboBoxItem Content="17:00"/>
+				<ComboBoxItem Content="18:00"/>
+				<ComboBoxItem Content="19:00"/>
+				<ComboBoxItem Content="20:00"/>
+			</ComboBox>
+		</StackPanel>
+
+		<!-- Важность -->
+		<CheckBox Grid.Row="6" x:Name="chkImportant"
+                  Content="Важная задача"
+                  Margin="0,0,0,15"/>
+
+		<!-- Заметки -->
+		<TextBlock Grid.Row="7" Text="Заметки:"/>
+		<TextBox Grid.Row="8" x:Name="txtNotes"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 VerticalScrollBarVisibility="Auto"
+                 MinHeight="100"/>
+
+		<!-- Кнопки -->
+		<StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button x:Name="btnCancel" Content="Отмена" Click="BtnCancel_Click" Height="85"/>
+			<Button x:Name="btnSave" Content="Сохранить"
+                    Background="#2196F3"
+                    Foreground="White"
+                    Click="BtnSave_Click" Height="65"/>
+		</StackPanel>
+	</Grid>
+</Window>

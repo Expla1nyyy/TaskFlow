@@ -1,0 +1,471 @@
+﻿<Window x:Class="TaskFlow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TaskFlow"
+        mc:Ignorable="d"
+        Title="TaskFlow - Управление задачами" 
+        Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource BackgroundBrush}">
+
+    <Window.Resources>
+        <!-- Цвета -->
+        <SolidColorBrush x:Key="PrimaryColor" Color="#2196F3"/>
+        <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
+        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="TextColor" Color="#333333"/>
+        <SolidColorBrush x:Key="SecondaryText" Color="#666666"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
+        <SolidColorBrush x:Key="ImportantColor" Color="#FF9800"/>
+        <SolidColorBrush x:Key="CompletedColor" Color="#4CAF50"/>
+
+        <!-- Стили -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="15"/>
+        </Style>
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource PrimaryColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryColor}"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SelectedButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <Style x:Key="TaskCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style x:Key="ImportantTaskCardStyle" BasedOn="{StaticResource TaskCardStyle}" TargetType="Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource ImportantColor}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <!-- Конвертеры -->
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <local:ImportantStyleConverter x:Key="ImportantStyleConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая панель -->
+        <Border Grid.Column="0" 
+                Background="{DynamicResource CardBackground}"
+                BorderBrush="{DynamicResource BorderColor}"
+                BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Верхняя часть - переключатель вида -->
+                <StackPanel Grid.Row="0" Margin="15">
+                    <TextBlock Text="ВИД" 
+                               FontSize="12"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource SecondaryText}"
+                               Margin="0,0,0,10"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="btnListView" 
+                                Content="список" 
+                                Style="{StaticResource SelectedButtonStyle}"
+                                Click="BtnListView_Click"
+                                Margin="0,0,5,0"/>
+                        <Button x:Name="btnCardsView" 
+                                Content="карточки" 
+                                Style="{StaticResource ButtonStyle}"
+                                Click="BtnCardsView_Click"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Список задач по дням -->
+                <StackPanel Grid.Row="1" Margin="15,0,15,0">
+                    <!-- Завтра -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel>
+                            <TextBlock x:Name="txtTomorrow" 
+                                       Text="Завтра, ..."
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextColor}"/>
+                            <TextBlock x:Name="txtTomorrowCount" 
+                                       Text="0 задач"
+                                       Foreground="{DynamicResource SecondaryText}"
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource CardStyle}" Height="72">
+                        <StackPanel>
+                            <TextBlock x:Name="txtDayAfter" 
+                                       Text="Послезавтра, ..."
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextColor}"/>
+                            <TextBlock x:Name="txtDayAfterCount" 
+                                       Text="0 задач"
+                                       Foreground="{DynamicResource SecondaryText}"
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Послезавтра -->
+                </StackPanel>
+
+                <!-- Нижняя часть - меню -->
+                <Border Grid.Row="2" 
+                        Background="{DynamicResource CardBackground}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="0,1,0,0"
+                        Padding="15">
+                    <StackPanel>
+                        <Button Content="1. аккаунт"
+                                Style="{StaticResource ButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="0,0,0,5"
+                                Click="BtnAccount_Click"/>
+                        <Button Content="2. тема (светлая/тёмная)"
+                                Style="{StaticResource ButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Margin="0,0,0,5"
+                                Click="BtnTheme_Click"/>
+                        <Button Content="3. настройки"
+                                Style="{StaticResource ButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Left"
+                                Click="BtnSettings_Click"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Центральная панель -->
+        <Grid Grid.Column="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок с сегодняшней датой -->
+            <TextBlock x:Name="txtTodayDate"
+                       Text="среда, 4 февраля"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="{DynamicResource TextColor}"
+                       Margin="0,0,0,20"/>
+
+            <!-- Список задач -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <!-- Режим списка -->
+                    <ItemsControl x:Name="listTasks"
+                                  ItemsSource="{Binding ActiveTasks}"
+                                  Visibility="Visible">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TaskCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="{Binding Title}" 
+                                                       FontSize="14" 
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextColor}"/>
+                                            <TextBlock Text="{Binding DueTime, StringFormat='выполнить до {0}'}" 
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource SecondaryText}"
+                                                       Margin="0,5,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="1" 
+                                                   Text="★" 
+                                                   Foreground="{DynamicResource ImportantColor}"
+                                                   FontSize="16"
+                                                   Visibility="{Binding IsImportant, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                   Margin="10,0,10,0"/>
+
+                                        <Button Grid.Column="2"
+                                                Content="✓"
+                                                FontSize="14"
+                                                FontWeight="Bold"
+                                                Foreground="{DynamicResource CompletedColor}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="30"
+                                                Height="30"
+                                                Command="{Binding CompleteCommand}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <!-- Режим карточек -->
+                    <ItemsControl x:Name="cardsTasks"
+                                  ItemsSource="{Binding ActiveTasks}"
+                                  Visibility="Collapsed">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="200"
+                                        Height="120"
+                                        Style="{Binding IsImportant, Converter={StaticResource ImportantStyleConverter}}"
+                                        Margin="0,0,10,10"
+                                        MouseDown="TaskCard_MouseDown">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0">
+                                            <TextBlock Text="{Binding Title}" 
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       TextWrapping="Wrap"
+                                                       MaxHeight="40"
+                                                       Margin="0,0,0,5"/>
+                                            <TextBlock Text="{Binding DueTime, StringFormat='до {0}'}" 
+                                                       FontSize="11"
+                                                       Foreground="{DynamicResource SecondaryText}"/>
+                                        </StackPanel>
+
+                                        <Button Grid.Row="1"
+                                                Content="✓ Выполнить"
+                                                FontSize="11"
+                                                Foreground="{DynamicResource CompletedColor}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                HorizontalAlignment="Right"
+                                                Command="{Binding CompleteCommand}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+
+            <!-- Выполненные задачи -->
+            <Border Grid.Row="2" 
+                    Style="{StaticResource CardStyle}"
+                    Margin="0,20,0,0">
+                <StackPanel>
+                    <TextBlock Text="Выполненные задачи"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextColor}"
+                               Margin="0,0,0,10"/>
+
+                    <ItemsControl x:Name="listCompletedTasks" 
+                                  ItemsSource="{Binding CompletedTasks}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                    <TextBlock Text="✓" 
+                                               Foreground="{DynamicResource CompletedColor}"
+                                               Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding Title}"
+                                               Foreground="{DynamicResource SecondaryText}"
+                                               TextDecorations="Strikethrough"/>
+                                    <TextBlock Text="{Binding CompletionTime, StringFormat='выполнено - {0}'}"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource SecondaryText}"
+                                               Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Кнопки управления внизу -->
+            <StackPanel Grid.Row="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,0">
+                <Button x:Name="btnEditTask"
+                        Content="Редактировать"
+                        Style="{StaticResource ButtonStyle}"
+                        Margin="0,0,10,0"
+                        Click="BtnEditTask_Click"/>
+                <Button x:Name="btnDeleteTask"
+                        Content="Удалить"
+                        Style="{StaticResource ButtonStyle}"
+                        Margin="0,0,10,0"
+                        Click="BtnDeleteTask_Click"/>
+                <Button x:Name="btnCompleteTask"
+                        Content="Выполнить"
+                        Style="{StaticResource ButtonStyle}"
+                        Margin="0,0,10,0"
+                        Click="BtnCompleteTask_Click"/>
+                <Button x:Name="btnAddTask"
+                        Content="Добавить +"
+                        Style="{StaticResource SelectedButtonStyle}"
+                        Click="BtnAddTask_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Правая панель -->
+        <Border Grid.Column="2" 
+                Background="{DynamicResource CardBackground}"
+                BorderBrush="{DynamicResource BorderColor}"
+                BorderThickness="1,0,0,0"
+                Padding="20">
+            <Grid>
+                <!-- Сообщение при отсутствии выбранной задачи -->
+                <Border x:Name="panelNoTaskSelected"
+                        Background="{DynamicResource BackgroundBrush}"
+                        CornerRadius="8"
+                        Visibility="Visible">
+                    <TextBlock Text="Выберите задачу"
+                               FontSize="16"
+                               Foreground="{DynamicResource SecondaryText}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Детали выбранной задачи -->
+                <Border x:Name="panelTaskDetails"
+                        Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- Заголовок задачи -->
+                            <TextBlock x:Name="txtTaskTitle"
+                                       Text="ФИЛЬМЫ"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Margin="0,0,0,10"
+                                       TextWrapping="Wrap"/>
+
+                            <!-- Описание -->
+                            <TextBlock x:Name="txtTaskDescription"
+                                       Text="Описание задачи"
+                                       FontSize="13"
+                                       Foreground="{DynamicResource SecondaryText}"
+                                       Margin="0,0,0,15"
+                                       TextWrapping="Wrap"/>
+
+                            <!-- Срок выполнения -->
+                            <TextBlock x:Name="txtDueTime"
+                                       Text="ВЫПОЛНИТЬ ДО 13:08"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource SecondaryText}"
+                                       Margin="0,0,0,5"/>
+
+                            <!-- Дата создания -->
+                            <TextBlock x:Name="txtCreatedTime"
+                                       Text="СОЗДАНА В 13:08"
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="{DynamicResource SecondaryText}"
+                                       Margin="0,0,0,20"/>
+
+                            <!-- Полная дата и время -->
+                            <StackPanel Margin="0,0,0,20">
+                                <TextBlock x:Name="txtDateFull"
+                                           Text="5 февраля 2022"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource SecondaryText}"/>
+                                <TextBlock x:Name="txtTimeFull"
+                                           Text="13:08:05"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource SecondaryText}"/>
+                            </StackPanel>
+
+                            <!-- Навигация по датам -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                                <TextBlock x:Name="txtDate19" Text="19 янв." Margin="0,0,10,0"/>
+                                <TextBlock x:Name="txtDate20" Text="20 янв." Margin="0,0,10,0"/>
+                                <TextBlock x:Name="txtDate21" Text="21 янв." 
+                                           Foreground="{DynamicResource PrimaryColor}"
+                                           FontWeight="Bold" Margin="0,0,10,0"/>
+                                <TextBlock x:Name="txtDate22" Text="22 янв." Margin="0,0,10,0"/>
+                                <TextBlock x:Name="txtDate23" Text="23 янв."/>
+                            </StackPanel>
+
+                            <!-- Кнопка важности -->
+                            <Button x:Name="btnImportant"
+                                    Content="☆ Обычная"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Margin="0,0,0,30"
+                                    Click="BtnImportant_Click"/>
+
+                            <!-- Заметки -->
+                            <TextBlock Text="Заметки к задаче"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Margin="0,0,0,10"/>
+
+                            <TextBox x:Name="txtNotes"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     MinHeight="150"
+                                     BorderBrush="{DynamicResource BorderColor}"
+                                     BorderThickness="1"
+                                     Padding="10"
+                                     TextChanged="TxtNotes_TextChanged"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
