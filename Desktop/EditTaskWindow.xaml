@@ -9,88 +9,92 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
 
-	<Window.Resources>
-		<Style TargetType="TextBlock">
-			<Setter Property="Margin" Value="0,0,0,5"/>
-			<Setter Property="FontWeight" Value="SemiBold"/>
-		</Style>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
 
-		<Style TargetType="TextBox">
-			<Setter Property="Margin" Value="0,0,0,15"/>
-			<Setter Property="Padding" Value="5"/>
-			<Setter Property="BorderThickness" Value="1"/>
-			<Setter Property="BorderBrush" Value="#E0E0E0"/>
-		</Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+        </Style>
 
-		<Style TargetType="Button">
-			<Setter Property="Padding" Value="10,5"/>
-			<Setter Property="Margin" Value="5,0,0,0"/>
-		</Style>
-	</Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+    </Window.Resources>
 
-	<Grid Margin="15">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="Auto"/>
-		</Grid.RowDefinitions>
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="123*"/>
+            <ColumnDefinition Width="247*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-		<!-- Название задачи -->
-		<TextBlock Grid.Row="0" Text="Название задачи:"/>
-		<TextBox Grid.Row="1" x:Name="txtTitle" Text=""/>
+        <!-- Название задачи -->
+        <TextBlock Grid.Row="0" Text="Название задачи:" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Row="1" x:Name="txtTitle" Text="" Grid.ColumnSpan="2"/>
 
-		<!-- Описание -->
-		<TextBlock Grid.Row="2" Text="Описание:"/>
-		<TextBox Grid.Row="3" x:Name="txtDescription"
+        <!-- Описание -->
+        <TextBlock Grid.Row="2" Text="Описание:" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Row="3" x:Name="txtDescription"
                  TextWrapping="Wrap"
                  AcceptsReturn="True"
-                 Height="60"/>
+                 Height="60" Grid.ColumnSpan="2"/>
 
-		<!-- Срок выполнения -->
-		<TextBlock Grid.Row="4" Text="Срок выполнения:"/>
-		<StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,0,0,15">
-			<DatePicker x:Name="datePicker" Width="150" Margin="0,0,10,0" Height="142"/>
-			<ComboBox x:Name="cmbTime" Width="100">
-				<ComboBoxItem Content="08:00"/>
-				<ComboBoxItem Content="09:00"/>
-				<ComboBoxItem Content="10:00"/>
-				<ComboBoxItem Content="11:00"/>
-				<ComboBoxItem Content="12:00"/>
-				<ComboBoxItem Content="13:00"/>
-				<ComboBoxItem Content="14:00"/>
-				<ComboBoxItem Content="15:00"/>
-				<ComboBoxItem Content="16:00"/>
-				<ComboBoxItem Content="17:00"/>
-				<ComboBoxItem Content="18:00"/>
-				<ComboBoxItem Content="19:00"/>
-				<ComboBoxItem Content="20:00"/>
-			</ComboBox>
-		</StackPanel>
+        <!-- Срок выполнения -->
+        <TextBlock Grid.Row="4" Text="Срок выполнения:" Grid.ColumnSpan="2"/>
+        <StackPanel Grid.Row="5" Orientation="Horizontal" Height="46" VerticalAlignment="Top" Grid.ColumnSpan="2">
+            <DatePicker x:Name="datePicker" Width="150" Margin="0,0,10,0" Height="41"/>
+            <ComboBox x:Name="cmbTime" Width="100" Height="41">
+                <ComboBoxItem Content="08:00"/>
+                <ComboBoxItem Content="09:00"/>
+                <ComboBoxItem Content="10:00"/>
+                <ComboBoxItem Content="11:00"/>
+                <ComboBoxItem Content="12:00"/>
+                <ComboBoxItem Content="13:00"/>
+                <ComboBoxItem Content="14:00"/>
+                <ComboBoxItem Content="15:00"/>
+                <ComboBoxItem Content="16:00"/>
+                <ComboBoxItem Content="17:00"/>
+                <ComboBoxItem Content="18:00"/>
+                <ComboBoxItem Content="19:00"/>
+                <ComboBoxItem Content="20:00"/>
+            </ComboBox>
+        </StackPanel>
 
-		<!-- Важность -->
-		<CheckBox Grid.Row="6" x:Name="chkImportant"
+        <!-- Важность -->
+        <CheckBox Grid.Row="5" x:Name="chkImportant"
                   Content="Важная задача"
-                  Margin="0,0,0,15"/>
+                  Margin="10,224,0,0" HorizontalAlignment="Left" Width="125" Height="25" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
 
-		<!-- Заметки -->
-		<TextBlock Grid.Row="7" Text="Заметки:"/>
-		<TextBox Grid.Row="8" x:Name="txtNotes"
+        <!-- Заметки -->
+        <TextBlock Grid.Row="5" Text="Заметки:" Margin="0,60,0,0" Height="31" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <TextBox Grid.Row="5" x:Name="txtNotes"
                  TextWrapping="Wrap"
                  AcceptsReturn="True"
                  VerticalScrollBarVisibility="Auto"
-                 MinHeight="100"/>
+                 MinHeight="100" Margin="0,91,0,0" Grid.ColumnSpan="2" Height="45" VerticalAlignment="Top"/>
 
-		<!-- Кнопки -->
-		<StackPanel Grid.Row="9" Orientation="Horizontal" HorizontalAlignment="Right">
-			<Button x:Name="btnCancel" Content="Отмена" Click="BtnCancel_Click" Height="85"/>
-			<Button x:Name="btnSave" Content="Сохранить"
+        <!-- Кнопки -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="83,214,0,0" Height="35" VerticalAlignment="Top">
+            <Button x:Name="btnCancel" Content="Отмена" Click="BtnCancel_Click" Height="35"/>
+            <Button x:Name="btnSave" Content="Сохранить"
                     Background="#2196F3"
                     Foreground="White"
-                    Click="BtnSave_Click" Height="65"/>
-		</StackPanel>
-	</Grid>
+                    Click="BtnSave_Click" Height="36"/>
+        </StackPanel>
+    </Grid>
 </Window>

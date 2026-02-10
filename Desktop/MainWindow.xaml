@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskFlow"
         mc:Ignorable="d"
-        Title="TaskFlow - Управление задачами" 
+        Title="TaskFlow" 
         Height="700" Width="1200"
         WindowStartupLocation="CenterScreen"
-        Background="{DynamicResource BackgroundBrush}">
+        Background="{DynamicResource BackgroundBrush}" ResizeMode="CanMinimize">
 
     <Window.Resources>
         <!-- Цвета -->
@@ -93,33 +93,34 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="499*"/>
+                    <RowDefinition Height="83*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Верхняя часть - переключатель вида -->
-                <StackPanel Grid.Row="0" Margin="15">
+                <StackPanel Grid.Row="0" Margin="15,15,15,15">
                     <TextBlock Text="ВИД" 
                                FontSize="12"
                                FontWeight="Bold"
                                Foreground="{DynamicResource SecondaryText}"
-                               Margin="0,0,0,10"/>
+                               Margin="0,0,0,10" Width="27"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button x:Name="btnListView" 
                                 Content="список" 
                                 Style="{StaticResource SelectedButtonStyle}"
                                 Click="BtnListView_Click"
-                                Margin="0,0,5,0"/>
+                                Margin="0,0,5,0" Width="96"/>
                         <Button x:Name="btnCardsView" 
                                 Content="карточки" 
                                 Style="{StaticResource ButtonStyle}"
-                                Click="BtnCardsView_Click"/>
+                                Click="BtnCardsView_Click" Width="95" Height="46"/>
                     </StackPanel>
                 </StackPanel>
 
                 <!-- Список задач по дням -->
-                <StackPanel Grid.Row="1" Margin="15,0,15,0">
+                <StackPanel Grid.Row="1" Margin="15,0,15,0" Grid.RowSpan="2">
                     <!-- Завтра -->
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
@@ -150,31 +151,19 @@
                 </StackPanel>
 
                 <!-- Нижняя часть - меню -->
-                <Border Grid.Row="2" 
-                        Background="{DynamicResource CardBackground}"
-                        BorderBrush="{DynamicResource BorderColor}"
-                        BorderThickness="0,1,0,0"
-                        Padding="15">
-                    <StackPanel>
-                        <Button Content="1. аккаунт"
+                <Button Content="аккаунт"
                                 Style="{StaticResource ButtonStyle}"
-                                HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
-                                Margin="0,0,0,5"
-                                Click="BtnAccount_Click"/>
-                        <Button Content="2. тема (светлая/тёмная)"
+                                Margin="10,0,0,61"
+                                Click="BtnAccount_Click" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="77" Height="46" VerticalAlignment="Bottom"/>
+                <Button Content="настройки"
                                 Style="{StaticResource ButtonStyle}"
-                                HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
-                                Margin="0,0,0,5"
-                                Click="BtnTheme_Click"/>
-                        <Button Content="3. настройки"
+                                Click="BtnSettings_Click" Margin="157,0,15,61" Grid.Row="1" Grid.RowSpan="2" Height="46" VerticalAlignment="Bottom"/>
+                <Button Content="тема оформления"
                                 Style="{StaticResource ButtonStyle}"
-                                HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
-                                Click="BtnSettings_Click"/>
-                    </StackPanel>
-                </Border>
+                                Click="BtnTheme_Click" Margin="0,0,0,10" Grid.Row="2" HorizontalAlignment="Center" Width="114" Height="46" VerticalAlignment="Bottom"/>
             </Grid>
         </Border>
 
@@ -188,19 +177,19 @@
 
             <!-- Заголовок с сегодняшней датой -->
             <TextBlock x:Name="txtTodayDate"
-                       Text="среда, 4 февраля"
+                       Text="Среда, 4 февраля"
                        FontSize="18"
                        FontWeight="Bold"
                        Foreground="{DynamicResource TextColor}"
                        Margin="0,0,0,20"/>
 
             <!-- Список задач -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,132">
                 <Grid>
                     <!-- Режим списка -->
                     <ItemsControl x:Name="listTasks"
                                   ItemsSource="{Binding ActiveTasks}"
-                                  Visibility="Visible">
+                                  Visibility="Visible" Margin="0,0,0,10">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource TaskCardStyle}">
@@ -301,9 +290,9 @@
             </ScrollViewer>
 
             <!-- Выполненные задачи -->
-            <Border Grid.Row="2" 
+            <Border Grid.Row="1" 
                     Style="{StaticResource CardStyle}"
-                    Margin="0,20,0,0">
+                    Margin="0,437,305,0" Grid.RowSpan="2">
                 <StackPanel>
                     <TextBlock Text="Выполненные задачи"
                                FontWeight="Bold"
@@ -341,12 +330,12 @@
                         Content="Редактировать"
                         Style="{StaticResource ButtonStyle}"
                         Margin="0,0,10,0"
-                        Click="BtnEditTask_Click"/>
+                        Click="BtnEditTask_Click" Height="46"/>
                 <Button x:Name="btnDeleteTask"
                         Content="Удалить"
                         Style="{StaticResource ButtonStyle}"
                         Margin="0,0,10,0"
-                        Click="BtnDeleteTask_Click"/>
+                        Click="BtnDeleteTask_Click" Width="55"/>
                 <Button x:Name="btnCompleteTask"
                         Content="Выполнить"
                         Style="{StaticResource ButtonStyle}"

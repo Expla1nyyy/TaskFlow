@@ -150,8 +150,8 @@ namespace TaskFlow
             // Обновить информацию
             txtTaskTitle.Text = SelectedTask.Title.ToUpper();
             txtTaskDescription.Text = SelectedTask.Description;
-            txtDueTime.Text = $"ВЫПОЛНИТЬ ДО {SelectedTask.DueTime}";
-            txtCreatedTime.Text = $"СОЗДАНА В {SelectedTask.CreatedTime}";
+            txtDueTime.Text = $"Выполнить до {SelectedTask.DueTime}";
+            txtCreatedTime.Text = $"Создана в {SelectedTask.CreatedTime}";
             txtDateFull.Text = SelectedTask.CreatedDate.ToString("d MMMM yyyy");
             txtTimeFull.Text = SelectedTask.CreatedDate.ToString("HH:mm:ss");
             txtNotes.Text = SelectedTask.Notes;
