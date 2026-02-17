@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -75,9 +76,6 @@ namespace TaskFlow
 
             // Обновление счетчиков
             UpdateTaskCounters();
-
-            // Обновление навигации по датам
-            UpdateDateNavigation();
         }
 
         private void UpdateTaskCounters()
@@ -97,42 +95,6 @@ namespace TaskFlow
             var dayAfterImportant = ActiveTasks.Count(t => t.DueDate.Date == dayAfterTomorrow && t.IsImportant);
             txtDayAfterCount.Text = $"{dayAfterCount} задач" +
                 (dayAfterImportant > 0 ? $", {dayAfterImportant} важных" : "");
-        }
-
-        private void UpdateDateNavigation(DateTime? selectedDate = null)
-        {
-            var today = DateTime.Today;
-            var dates = new[]
-            {
-                today.AddDays(-2),
-                today.AddDays(-1),
-                today,
-                today.AddDays(1),
-                today.AddDays(2)
-            };
-
-            var labels = new[] { txtDate19, txtDate20, txtDate21, txtDate22, txtDate23 };
-
-            for (int i = 0; i < labels.Length; i++)
-            {
-                labels[i].Text = dates[i].ToString("d MMM");
-
-                if (selectedDate.HasValue && selectedDate.Value.Date == dates[i].Date)
-                {
-                    labels[i].Foreground = (System.Windows.Media.Brush)FindResource("PrimaryColor");
-                    labels[i].FontWeight = FontWeights.Bold;
-                }
-                else if (dates[i].Date == today.Date)
-                {
-                    labels[i].Foreground = (System.Windows.Media.Brush)FindResource("PrimaryColor");
-                    labels[i].FontWeight = FontWeights.Bold;
-                }
-                else
-                {
-                    labels[i].Foreground = (System.Windows.Media.Brush)FindResource("TextColor");
-                    labels[i].FontWeight = FontWeights.Normal;
-                }
-            }
         }
 
         private void UpdateTaskDetails()
@@ -156,16 +118,12 @@ namespace TaskFlow
             txtTimeFull.Text = SelectedTask.CreatedDate.ToString("HH:mm:ss");
             txtNotes.Text = SelectedTask.Notes;
             btnImportant.Content = SelectedTask.IsImportant ? "★ Важная" : "☆ Обычная";
-
-            // Обновить навигацию по датам
-            UpdateDateNavigation(SelectedTask.DueDate);
         }
 
         private void ShowNoTaskSelected()
         {
             panelTaskDetails.Visibility = Visibility.Collapsed;
             panelNoTaskSelected.Visibility = Visibility.Visible;
-            UpdateDateNavigation();
         }
 
         #region Обработчики событий
@@ -179,7 +137,6 @@ namespace TaskFlow
                 ActiveTasks.Add(newTask);
                 SelectedTask = newTask;
                 UpdateTaskCounters();
-                UpdateTaskDetails();
             }
         }
 
@@ -192,26 +149,41 @@ namespace TaskFlow
                 return;
             }
 
-            var editWindow = new EditTaskWindow(SelectedTask);
+            EditTask(SelectedTask);
+        }
+
+        private void BtnEditTaskFromCard_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is TaskModel task)
+            {
+                EditTask(task);
+            }
+        }
+
+        private void EditTask(TaskModel task)
+        {
+            var editWindow = new EditTaskWindow(task);
             if (editWindow.ShowDialog() == true)
             {
                 var editedTask = editWindow.EditedTask;
 
                 // Обновляем задачу в коллекции
-                if (ActiveTasks.Contains(SelectedTask))
+                if (ActiveTasks.Contains(task))
                 {
-                    int index = ActiveTasks.IndexOf(SelectedTask);
+                    int index = ActiveTasks.IndexOf(task);
                     ActiveTasks[index] = editedTask;
                 }
-                else if (CompletedTasks.Contains(SelectedTask))
+                else if (CompletedTasks.Contains(task))
                 {
-                    int index = CompletedTasks.IndexOf(SelectedTask);
+                    int index = CompletedTasks.IndexOf(task);
                     CompletedTasks[index] = editedTask;
                 }
 
-                SelectedTask = editedTask;
+                if (SelectedTask == task)
+                {
+                    SelectedTask = editedTask;
+                }
                 UpdateTaskCounters();
-                UpdateTaskDetails();
             }
         }
 
@@ -235,14 +207,31 @@ namespace TaskFlow
 
         private void BtnCompleteTask_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedTask != null && ActiveTasks.Contains(SelectedTask))
-            {
-                SelectedTask.IsCompleted = true;
-                SelectedTask.CompletionDate = DateTime.Now;
-                ActiveTasks.Remove(SelectedTask);
-                CompletedTasks.Insert(0, SelectedTask);
+            CompleteTask(SelectedTask);
+        }
 
-                ShowNoTaskSelected();
+        private void BtnCompleteTaskFromCard_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is TaskModel task)
+            {
+                CompleteTask(task);
+            }
+        }
+
+        private void CompleteTask(TaskModel task)
+        {
+            if (task != null && ActiveTasks.Contains(task))
+            {
+                task.IsCompleted = true;
+                task.CompletionDate = DateTime.Now;
+                ActiveTasks.Remove(task);
+                CompletedTasks.Insert(0, task);
+
+                if (SelectedTask == task)
+                {
+                    SelectedTask = null;
+                    ShowNoTaskSelected();
+                }
                 UpdateTaskCounters();
             }
         }
@@ -276,6 +265,10 @@ namespace TaskFlow
         {
             if (sender is FrameworkElement element && element.DataContext is TaskModel task)
             {
+                // Не выбираем задачу, если кликнули по кнопке
+                if (e.OriginalSource is Button || e.OriginalSource is System.Windows.Controls.TextBlock)
+                    return;
+
                 SelectedTask = task;
             }
         }

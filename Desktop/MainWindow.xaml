@@ -93,8 +93,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="499*"/>
-                    <RowDefinition Height="83*"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -104,7 +103,7 @@
                                FontSize="12"
                                FontWeight="Bold"
                                Foreground="{DynamicResource SecondaryText}"
-                               Margin="0,0,0,10" Width="27"/>
+                               Margin="0,0,0,10" Width="28"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button x:Name="btnListView" 
@@ -120,7 +119,7 @@
                 </StackPanel>
 
                 <!-- Список задач по дням -->
-                <StackPanel Grid.Row="1" Margin="15,0,15,0" Grid.RowSpan="2">
+                <StackPanel Grid.Row="1" Margin="15,0,15,0">
                     <!-- Завтра -->
                     <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
@@ -134,7 +133,9 @@
                                        Margin="0,5,0,0"/>
                         </StackPanel>
                     </Border>
-                    <Border Style="{StaticResource CardStyle}" Height="72">
+
+                    <!-- Послезавтра -->
+                    <Border Style="{StaticResource CardStyle}">
                         <StackPanel>
                             <TextBlock x:Name="txtDayAfter" 
                                        Text="Послезавтра, ..."
@@ -146,24 +147,25 @@
                                        Margin="0,5,0,0"/>
                         </StackPanel>
                     </Border>
-
-                    <!-- Послезавтра -->
                 </StackPanel>
 
                 <!-- Нижняя часть - меню -->
-                <Button Content="аккаунт"
-                                Style="{StaticResource ButtonStyle}"
-                                HorizontalContentAlignment="Left"
-                                Margin="10,0,0,61"
-                                Click="BtnAccount_Click" Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="77" Height="46" VerticalAlignment="Bottom"/>
-                <Button Content="настройки"
-                                Style="{StaticResource ButtonStyle}"
-                                HorizontalContentAlignment="Left"
-                                Click="BtnSettings_Click" Margin="157,0,15,61" Grid.Row="1" Grid.RowSpan="2" Height="46" VerticalAlignment="Bottom"/>
-                <Button Content="тема оформления"
-                                Style="{StaticResource ButtonStyle}"
-                                HorizontalContentAlignment="Left"
-                                Click="BtnTheme_Click" Margin="0,0,0,10" Grid.Row="2" HorizontalAlignment="Center" Width="114" Height="46" VerticalAlignment="Bottom"/>
+                <StackPanel Grid.Row="2" Margin="15">
+                    <Button Content="аккаунт"
+                            Style="{StaticResource ButtonStyle}"
+                            HorizontalContentAlignment="Left"
+                            Click="BtnAccount_Click"
+                            Margin="0,0,0,5"/>
+                    <Button Content="настройки"
+                            Style="{StaticResource ButtonStyle}"
+                            HorizontalContentAlignment="Left"
+                            Click="BtnSettings_Click"
+                            Margin="0,0,0,5"/>
+                    <Button Content="тема оформления"
+                            Style="{StaticResource ButtonStyle}"
+                            HorizontalContentAlignment="Left"
+                            Click="BtnTheme_Click"/>
+                </StackPanel>
             </Grid>
         </Border>
 
@@ -184,18 +186,20 @@
                        Margin="0,0,0,20"/>
 
             <!-- Список задач -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,132">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10">
                 <Grid>
                     <!-- Режим списка -->
                     <ItemsControl x:Name="listTasks"
                                   ItemsSource="{Binding ActiveTasks}"
-                                  Visibility="Visible" Margin="0,0,0,10">
+                                  Visibility="Visible">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource TaskCardStyle}">
+                                <Border Style="{StaticResource TaskCardStyle}"
+                                        MouseDown="TaskCard_MouseDown">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
@@ -216,9 +220,24 @@
                                                    Foreground="{DynamicResource ImportantColor}"
                                                    FontSize="16"
                                                    Visibility="{Binding IsImportant, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                                   Margin="10,0,10,0"/>
+                                                   Margin="10,0,10,0"
+                                                   VerticalAlignment="Center"/>
 
                                         <Button Grid.Column="2"
+                                                Content="✎"
+                                                FontSize="14"
+                                                FontWeight="Bold"
+                                                Foreground="{DynamicResource PrimaryColor}"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Width="30"
+                                                Height="30"
+                                                Margin="0,0,5,0"
+                                                VerticalAlignment="Center"
+                                                Click="BtnEditTaskFromCard_Click"
+                                                Tag="{Binding}"/>
+
+                                        <Button Grid.Column="3"
                                                 Content="✓"
                                                 FontSize="14"
                                                 FontWeight="Bold"
@@ -227,7 +246,9 @@
                                                 BorderThickness="0"
                                                 Width="30"
                                                 Height="30"
-                                                Command="{Binding CompleteCommand}"/>
+                                                VerticalAlignment="Center"
+                                                Click="BtnCompleteTaskFromCard_Click"
+                                                Tag="{Binding}"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -251,7 +272,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Width="200"
-                                        Height="120"
+                                        Height="150"
                                         Style="{Binding IsImportant, Converter={StaticResource ImportantStyleConverter}}"
                                         Margin="0,0,10,10"
                                         MouseDown="TaskCard_MouseDown">
@@ -261,7 +282,7 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <StackPanel Grid.Row="0">
+                                        <StackPanel Grid.Row="0" Margin="10">
                                             <TextBlock Text="{Binding Title}" 
                                                        FontSize="13"
                                                        FontWeight="SemiBold"
@@ -271,16 +292,39 @@
                                             <TextBlock Text="{Binding DueTime, StringFormat='до {0}'}" 
                                                        FontSize="11"
                                                        Foreground="{DynamicResource SecondaryText}"/>
+                                            <TextBlock Text="★" 
+                                                       Foreground="{DynamicResource ImportantColor}"
+                                                       FontSize="14"
+                                                       Visibility="{Binding IsImportant, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                       Margin="0,5,0,0"/>
                                         </StackPanel>
 
-                                        <Button Grid.Row="1"
-                                                Content="✓ Выполнить"
-                                                FontSize="11"
-                                                Foreground="{DynamicResource CompletedColor}"
-                                                Background="Transparent"
-                                                BorderThickness="0"
-                                                HorizontalAlignment="Right"
-                                                Command="{Binding CompleteCommand}"/>
+                                        <StackPanel Grid.Row="1" 
+                                                    Orientation="Horizontal" 
+                                                    HorizontalAlignment="Right"
+                                                    Margin="0,0,10,10">
+                                            <Button Content="✎"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Foreground="{DynamicResource PrimaryColor}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="25"
+                                                    Height="25"
+                                                    Margin="0,0,5,0"
+                                                    Click="BtnEditTaskFromCard_Click"
+                                                    Tag="{Binding}"/>
+                                            <Button Content="✓"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Foreground="{DynamicResource CompletedColor}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="25"
+                                                    Height="25"
+                                                    Click="BtnCompleteTaskFromCard_Click"
+                                                    Tag="{Binding}"/>
+                                        </StackPanel>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
@@ -291,8 +335,7 @@
 
             <!-- Выполненные задачи -->
             <Border Grid.Row="1" 
-                    Style="{StaticResource CardStyle}"
-                    Margin="0,437,305,0" Grid.RowSpan="2">
+                    Style="{StaticResource CardStyle}" HorizontalAlignment="Left" Width="460" Height="130" VerticalAlignment="Top" Margin="10,436,0,0">
                 <StackPanel>
                     <TextBlock Text="Выполненные задачи"
                                FontWeight="Bold"
@@ -300,7 +343,8 @@
                                Margin="0,0,0,10"/>
 
                     <ItemsControl x:Name="listCompletedTasks" 
-                                  ItemsSource="{Binding CompletedTasks}">
+                                  ItemsSource="{Binding CompletedTasks}"
+                                  MaxHeight="80">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
@@ -310,10 +354,6 @@
                                     <TextBlock Text="{Binding Title}"
                                                Foreground="{DynamicResource SecondaryText}"
                                                TextDecorations="Strikethrough"/>
-                                    <TextBlock Text="{Binding CompletionTime, StringFormat='выполнено - {0}'}"
-                                               FontSize="11"
-                                               Foreground="{DynamicResource SecondaryText}"
-                                               Margin="10,0,0,0"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
@@ -325,27 +365,17 @@
             <StackPanel Grid.Row="2" 
                         Orientation="Horizontal" 
                         HorizontalAlignment="Right"
-                        Margin="0,10,0,0">
-                <Button x:Name="btnEditTask"
-                        Content="Редактировать"
-                        Style="{StaticResource ButtonStyle}"
-                        Margin="0,0,10,0"
-                        Click="BtnEditTask_Click" Height="46"/>
-                <Button x:Name="btnDeleteTask"
+                        Margin="0,10,0,0"
+                        VerticalAlignment="Bottom"/>
+            <Button x:Name="btnDeleteTask"
                         Content="Удалить"
                         Style="{StaticResource ButtonStyle}"
-                        Margin="0,0,10,0"
-                        Click="BtnDeleteTask_Click" Width="55"/>
-                <Button x:Name="btnCompleteTask"
-                        Content="Выполнить"
-                        Style="{StaticResource ButtonStyle}"
-                        Margin="0,0,10,0"
-                        Click="BtnCompleteTask_Click"/>
-                <Button x:Name="btnAddTask"
+                        Margin="0,508,10,0"
+                        Click="BtnDeleteTask_Click" Grid.Row="1" Height="58" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90"/>
+            <Button x:Name="btnAddTask"
                         Content="Добавить +"
                         Style="{StaticResource SelectedButtonStyle}"
-                        Click="BtnAddTask_Click"/>
-            </StackPanel>
+                        Click="BtnAddTask_Click" Margin="0,436,10,0" Grid.Row="1" Height="58" VerticalAlignment="Top" HorizontalAlignment="Right" Width="90"/>
         </Grid>
 
         <!-- Правая панель -->
@@ -417,22 +447,11 @@
                                            Foreground="{DynamicResource SecondaryText}"/>
                             </StackPanel>
 
-                            <!-- Навигация по датам -->
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
-                                <TextBlock x:Name="txtDate19" Text="19 янв." Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtDate20" Text="20 янв." Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtDate21" Text="21 янв." 
-                                           Foreground="{DynamicResource PrimaryColor}"
-                                           FontWeight="Bold" Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtDate22" Text="22 янв." Margin="0,0,10,0"/>
-                                <TextBlock x:Name="txtDate23" Text="23 янв."/>
-                            </StackPanel>
-
                             <!-- Кнопка важности -->
                             <Button x:Name="btnImportant"
                                     Content="☆ Обычная"
                                     Style="{StaticResource ButtonStyle}"
-                                    Margin="0,0,0,30"
+                                    Margin="0,0,0,20"
                                     Click="BtnImportant_Click"/>
 
                             <!-- Заметки -->
