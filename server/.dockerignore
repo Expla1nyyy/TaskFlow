@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Data (но не игнорируем саму папку data)
+# data/*.db
+
+# Logs
+logs/
+*.log
+
+# Tests
+tests/
+*.test.py
+
+# README etc
+README.md
+LICENSE

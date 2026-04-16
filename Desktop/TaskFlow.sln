@@ -7,8 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFlow", "TaskFlow.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{754FC069-D67B-A9D7-50A1-8D1CA196D8F1}"
 	ProjectSection(SolutionItems) = preProject
+		ApiService.cs = ApiService.cs
+		AppSettings.cs = AppSettings.cs
+		AuthWindow.xaml = AuthWindow.xaml
+		AuthWindow.xaml.cs = AuthWindow.xaml.cs
+		Converters.cs = Converters.cs
 		EditTaskWindow.xaml = EditTaskWindow.xaml
 		EditTaskWindow.xaml.cs = EditTaskWindow.xaml.cs
+		SettingsWindow.xaml = SettingsWindow.xaml
+		SettingsWindow.xaml.cs = SettingsWindow.xaml.cs
 	EndProjectSection
 EndProject
 Global

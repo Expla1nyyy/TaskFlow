@@ -1,0 +1,180 @@
+<Window x:Class="TaskFlow.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки"
+        Height="617" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+
+	<Window.Resources>
+		<!-- Копируем стили из MainWindow -->
+		<SolidColorBrush x:Key="PrimaryColor" Color="#2196F3"/>
+		<SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
+		<SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
+		<SolidColorBrush x:Key="TextColor" Color="#333333"/>
+		<SolidColorBrush x:Key="SecondaryText" Color="#666666"/>
+		<SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
+		<SolidColorBrush x:Key="ImportantColor" Color="#FF9800"/>
+		<SolidColorBrush x:Key="CompletedColor" Color="#4CAF50"/>
+
+		<Style x:Key="CardStyle" TargetType="Border">
+			<Setter Property="Background" Value="{StaticResource CardBackground}"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Margin" Value="0,0,0,10"/>
+			<Setter Property="Padding" Value="15"/>
+			<Setter Property="Cursor" Value=""/>
+		</Style>
+
+		<Style x:Key="ButtonStyle" TargetType="Button">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderBrush" Value="{StaticResource PrimaryColor}"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Foreground" Value="{StaticResource PrimaryColor}"/>
+			<Setter Property="Padding" Value="10,5"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+							<ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="SelectedButtonStyle" BasedOn="{StaticResource ButtonStyle}" TargetType="Button">
+			<Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style TargetType="TextBlock" x:Key="SectionHeaderStyle">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+			<Setter Property="Margin" Value="0,0,0,15"/>
+		</Style>
+
+		<Style TargetType="TextBlock" x:Key="LabelStyle">
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+			<Setter Property="Margin" Value="0,0,0,5"/>
+		</Style>
+
+		<Style TargetType="TextBox">
+			<Setter Property="Padding" Value="8"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+			<Setter Property="Background" Value="{StaticResource CardBackground}"/>
+			<Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+			<Setter Property="Margin" Value="0,0,0,15"/>
+		</Style>
+
+		<Style TargetType="PasswordBox">
+			<Setter Property="Padding" Value="8"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+			<Setter Property="Background" Value="{StaticResource CardBackground}"/>
+			<Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+			<Setter Property="Margin" Value="0,0,0,15"/>
+		</Style>
+
+		<Style x:Key="SettingsButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+			<Setter Property="Margin" Value="0,0,10,0"/>
+			<Setter Property="Padding" Value="15,8"/>
+		</Style>
+
+		<Style x:Key="LogoutButtonStyle" TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+			<Setter Property="Background" Value="#FF4444"/>
+			<Setter Property="BorderBrush" Value="#FF4444"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Margin" Value="0,0,10,0"/>
+			<Setter Property="Padding" Value="15,8"/>
+		</Style>
+	</Window.Resources>
+
+	<ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+		<StackPanel>
+			<!-- Тема оформления -->
+			<TextBlock Text="Внешний вид" Style="{StaticResource SectionHeaderStyle}"/>
+
+			<Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
+				<StackPanel>
+					<CheckBox x:Name="chkDarkTheme"
+                              Content="Темная тема"
+                              Foreground="{StaticResource TextColor}"
+                              Checked="ChkDarkTheme_Changed"
+                              Unchecked="ChkDarkTheme_Changed"
+                              Margin="0,0,0,10"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Настройки аккаунта -->
+			<TextBlock Text="Аккаунт" Style="{StaticResource SectionHeaderStyle}"/>
+
+			<Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
+				<StackPanel>
+					<TextBlock Text="Имя пользователя:" Style="{StaticResource LabelStyle}"/>
+					<TextBlock x:Name="txtCurrentUser"
+                               Foreground="{StaticResource SecondaryText}"
+                               Margin="0,0,0,15"/>
+
+					<TextBlock Text="Адрес сервера:" Style="{StaticResource LabelStyle}"/>
+					<TextBox x:Name="txtServerUrl" Margin="0,0,0,15"/>
+
+					<Button x:Name="btnChangePassword"
+                            Content="Сменить пароль"
+                            Style="{StaticResource SettingsButtonStyle}"
+                            HorizontalAlignment="Left"
+                            Click="BtnChangePassword_Click"
+                            Margin="0,0,0,10"/>
+
+					<Button x:Name="btnLogout"
+                            Content="Выйти из аккаунта"
+                            Style="{StaticResource LogoutButtonStyle}"
+                            HorizontalAlignment="Left"
+                            Click="BtnLogout_Click"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Синхронизация -->
+			<TextBlock Text="Синхронизация" Style="{StaticResource SectionHeaderStyle}"/>
+
+			<Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
+				<StackPanel>
+					<TextBlock x:Name="txtLastSync"
+                               Foreground="{StaticResource SecondaryText}"
+                               Margin="0,0,0,10"/>
+
+					<Button x:Name="btnSyncNow"
+                            Content="Синхронизировать сейчас"
+                            Style="{StaticResource SettingsButtonStyle}"
+                            HorizontalAlignment="Left"
+                            Click="BtnSyncNow_Click"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Кнопки управления -->
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+				<Button x:Name="btnSave"
+                        Content="Сохранить"
+                        Style="{StaticResource SelectedButtonStyle}"
+                        Click="BtnSave_Click"
+                        Width="100"/>
+				<Button x:Name="btnCancel"
+                        Content="Отмена"
+                        Style="{StaticResource ButtonStyle}"
+                        Click="BtnCancel_Click"
+                        Width="100"
+                        Margin="10,0,0,0"/>
+			</StackPanel>
+		</StackPanel>
+	</ScrollViewer>
+</Window>

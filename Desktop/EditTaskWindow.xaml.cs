@@ -27,7 +27,7 @@ namespace TaskFlow
         private void InitializeControls()
         {
             datePicker.SelectedDate = DateTime.Today.AddDays(1);
-            cmbTime.SelectedIndex = 9; // 17:00
+            cmbTime.SelectedIndex = 10;
             txtTitle.Focus();
         }
 
@@ -37,7 +37,6 @@ namespace TaskFlow
             txtDescription.Text = task.Description;
             datePicker.SelectedDate = task.DueDate;
 
-            // Устанавливаем время
             var timeString = task.DueDate.ToString("HH:00");
             var item = cmbTime.Items.Cast<ComboBoxItem>()
                 .FirstOrDefault(x => (string)x.Content == timeString);
@@ -59,7 +58,6 @@ namespace TaskFlow
                 return;
             }
 
-            // Получаем дату и время
             DateTime? selectedDate = datePicker.SelectedDate;
             if (!selectedDate.HasValue)
             {
@@ -71,26 +69,28 @@ namespace TaskFlow
             var timeString = (cmbTime.SelectedItem as ComboBoxItem)?.Content?.ToString();
             if (string.IsNullOrEmpty(timeString) || !timeString.Contains(':'))
             {
-                timeString = "17:00";
+                timeString = "18:00";
             }
 
             var timeParts = timeString.Split(':');
             if (timeParts.Length != 2 || !int.TryParse(timeParts[0], out int hours) || !int.TryParse(timeParts[1], out int minutes))
             {
-                hours = 17;
+                hours = 18;
                 minutes = 0;
             }
 
             var dueDate = selectedDate.Value.Date.Add(new TimeSpan(hours, minutes, 0));
 
+            System.Diagnostics.Debug.WriteLine($"Saving task with DueDate: {dueDate:yyyy-MM-dd HH:mm:ss}");
+
             EditedTask = new TaskModel
             {
                 Title = txtTitle.Text.Trim(),
                 Description = txtDescription.Text,
-                DueDate = dueDate,
                 IsImportant = chkImportant.IsChecked ?? false,
                 Notes = txtNotes.Text,
-                CreatedDate = originalTask?.CreatedDate ?? DateTime.Now
+                CreatedDate = originalTask?.CreatedDate ?? DateTime.Now,
+                DueDate = dueDate
             };
 
             DialogResult = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -10,48 +11,66 @@ namespace TaskFlow
         private string title;
         private string description;
         private DateTime dueDate;
-        private DateTime createdDate = DateTime.Now;
+        private DateTime createdDate;
         private DateTime completionDate;
         private bool isCompleted;
         private bool isImportant;
         private string notes;
         private ICommand completeCommand;
+        private string syncId;
+        private bool isSynced;
+
+        public TaskModel()
+        {
+            syncId = Guid.NewGuid().ToString();
+            createdDate = DateTime.Now;
+            dueDate = DateTime.Now.AddDays(1).Date.AddHours(18);
+            title = "";
+            description = "";
+            notes = "";
+            isSynced = false;
+        }
 
         public string Title
         {
-            get => title;
+            get => title ?? "";
             set { title = value; OnPropertyChanged(); }
         }
 
         public string Description
         {
-            get => description;
+            get => description ?? "";
             set { description = value; OnPropertyChanged(); }
         }
 
         public DateTime DueDate
         {
             get => dueDate;
-            set { dueDate = value; OnPropertyChanged(); }
+            set
+            {
+                dueDate = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(DueTime));
+            }
         }
 
-        public string DueTime => DueDate.ToString("HH:mm");
+        public string DueTime => DueDate.ToString("HH:mm", CultureInfo.InvariantCulture);
 
         public DateTime CreatedDate
         {
             get => createdDate;
-            set { createdDate = value; OnPropertyChanged(); }
+            set { createdDate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CreatedTime)); }
         }
 
-        public string CreatedTime => CreatedDate.ToString("HH:mm");
+        public string CreatedTime => CreatedDate.ToString("HH:mm", CultureInfo.InvariantCulture);
 
         public DateTime CompletionDate
         {
             get => completionDate;
-            set { completionDate = value; OnPropertyChanged(); }
+            set { completionDate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CompletionTime)); }
         }
 
-        public string CompletionTime => CompletionDate.ToString("HH:mm");
+        public string CompletionTime => CompletionDate.ToString("HH:mm", CultureInfo.InvariantCulture);
 
         public bool IsCompleted
         {
@@ -67,8 +86,20 @@ namespace TaskFlow
 
         public string Notes
         {
-            get => notes;
+            get => notes ?? "";
             set { notes = value; OnPropertyChanged(); }
+        }
+
+        public string SyncId
+        {
+            get => syncId ?? Guid.NewGuid().ToString();
+            set { syncId = value; OnPropertyChanged(); }
+        }
+
+        public bool IsSynced
+        {
+            get => isSynced;
+            set { isSynced = value; OnPropertyChanged(); }
         }
 
         public ICommand CompleteCommand
@@ -99,7 +130,6 @@ namespace TaskFlow
         #endregion
     }
 
-    // RelayCommand для реализации ICommand
     public class RelayCommand : ICommand
     {
         private readonly Action<object> execute;

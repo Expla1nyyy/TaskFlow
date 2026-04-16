@@ -1,0 +1,267 @@
+<Window x:Class="TaskFlow.AuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="TaskFlow - Вход"
+        Height="800" Width="400"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#F5F5F5">
+
+	<Window.Resources>
+		<Style x:Key="TabButtonStyle" TargetType="Button">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Foreground" Value="#666666"/>
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Padding" Value="20,10"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}">
+							<ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ActiveTabButtonStyle" BasedOn="{StaticResource TabButtonStyle}" TargetType="Button">
+			<Setter Property="Foreground" Value="#2196F3"/>
+			<Setter Property="BorderBrush" Value="#2196F3"/>
+			<Setter Property="BorderThickness" Value="0,0,0,2"/>
+		</Style>
+
+		<Style TargetType="TextBox">
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="#E0E0E0"/>
+			<Setter Property="Margin" Value="0,0,0,15"/>
+		</Style>
+
+		<Style TargetType="PasswordBox">
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="#E0E0E0"/>
+			<Setter Property="Margin" Value="0,0,0,15"/>
+		</Style>
+
+		<Style TargetType="Button" x:Key="ActionButton">
+			<Setter Property="Background" Value="#2196F3"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+							<ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
+
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Заголовок -->
+		<TextBlock Text="TaskFlow"
+                   FontSize="28"
+                   FontWeight="Bold"
+                   Foreground="#2196F3"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+
+		<!-- Настройки сервера -->
+		<StackPanel Grid.Row="1" Margin="0,0,0,20">
+			<TextBlock Text="Адрес сервера:"
+                       FontWeight="SemiBold"
+                       Foreground="#333333"
+                       Margin="0,0,0,5"/>
+			<TextBox x:Name="txtServerUrl"
+                     Text="http://localhost:8000"
+                     TextChanged="TxtServerUrl_TextChanged"/>
+		</StackPanel>
+
+		<!-- Табы входа/регистрации -->
+		<Grid Grid.Row="2">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Кнопки табов -->
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+
+				<Button x:Name="btnLoginTab"
+                        Grid.Column="0"
+                        Content="Вход"
+                        Style="{StaticResource ActiveTabButtonStyle}"
+                        Click="BtnLoginTab_Click"/>
+				<Button x:Name="btnRegisterTab"
+                        Grid.Column="1"
+                        Content="Регистрация"
+                        Style="{StaticResource TabButtonStyle}"
+                        Click="BtnRegisterTab_Click"/>
+				<Button x:Name="btnRecoverTab"
+                        Grid.Column="2"
+                        Content="Восстановление"
+                        Style="{StaticResource TabButtonStyle}"
+                        Click="BtnRecoverTab_Click"/>
+			</Grid>
+
+			<!-- Панель входа -->
+			<Border x:Name="panelLogin"
+                    Grid.Row="1"
+                    Background="White"
+                    CornerRadius="8"
+                    Padding="20"
+                    Margin="0,10,0,0">
+				<StackPanel>
+					<TextBlock Text="Имя пользователя:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtLoginUsername"
+                             Margin="0,0,0,15"/>
+
+					<TextBlock Text="Пароль:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<PasswordBox x:Name="txtLoginPassword"
+                                 Margin="0,0,0,15"/>
+
+					<CheckBox x:Name="chkRememberMe"
+                              Content="Запомнить меня"
+                              Margin="0,0,0,20"/>
+
+					<Button x:Name="btnLogin"
+                            Content="Войти"
+                            Style="{StaticResource ActionButton}"
+                            Click="BtnLogin_Click"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Панель регистрации -->
+			<Border x:Name="panelRegister"
+                    Grid.Row="1"
+                    Background="White"
+                    CornerRadius="8"
+                    Padding="20"
+                    Margin="0,10,0,0"
+                    Visibility="Collapsed">
+				<StackPanel>
+					<TextBlock Text="Имя пользователя:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtRegUsername"
+                             Margin="0,0,0,15"/>
+
+					<TextBlock Text="Email:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtRegEmail"
+                             Margin="0,0,0,15"/>
+
+					<TextBlock Text="Пароль:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<PasswordBox x:Name="txtRegPassword"
+                                 Margin="0,0,0,15"/>
+
+					<TextBlock Text="Подтверждение пароля:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<PasswordBox x:Name="txtRegConfirmPassword"
+                                 Margin="0,0,0,15"/>
+
+					<TextBlock Text="Кодовое слово для восстановления:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtRecoveryWord"
+                             Margin="0,0,0,20"/>
+
+					<Button x:Name="btnRegister"
+                            Content="Зарегистрироваться"
+                            Style="{StaticResource ActionButton}"
+                            Click="BtnRegister_Click"/>
+				</StackPanel>
+			</Border>
+
+			<!-- Панель восстановления -->
+			<Border x:Name="panelRecover"
+                    Grid.Row="1"
+                    Background="White"
+                    CornerRadius="8"
+                    Padding="20"
+                    Margin="0,10,0,0"
+                    Visibility="Collapsed">
+				<StackPanel>
+					<TextBlock Text="Имя пользователя:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtRecoverUsername"
+                             Margin="0,0,0,15"/>
+
+					<TextBlock Text="Кодовое слово:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<TextBox x:Name="txtRecoverWord"
+                             Margin="0,0,0,15"/>
+
+					<TextBlock Text="Новый пароль:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<PasswordBox x:Name="txtRecoverNewPassword"
+                                 Margin="0,0,0,15"/>
+
+					<TextBlock Text="Подтверждение пароля:"
+                               FontWeight="SemiBold"
+                               Foreground="#333333"
+                               Margin="0,0,0,5"/>
+					<PasswordBox x:Name="txtRecoverConfirmPassword"
+                                 Margin="0,0,0,20"/>
+
+					<Button x:Name="btnRecover"
+                            Content="Восстановить пароль"
+                            Style="{StaticResource ActionButton}"
+                            Click="BtnRecover_Click"/>
+				</StackPanel>
+			</Border>
+		</Grid>
+
+		<!-- Статус -->
+		<TextBlock x:Name="txtStatus"
+                   Grid.Row="3"
+                   Foreground="#FF4444"
+                   TextWrapping="Wrap"
+                   Margin="0,10,0,0"/>
+	</Grid>
+</Window>

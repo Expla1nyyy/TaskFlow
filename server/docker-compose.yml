@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  taskflow-server:
+    build: .
+    container_name: taskflow-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+      - taskflow-data:/app/data
+    environment:
+      - TZ=Europe/Moscow
+      - PYTHONUNBUFFERED=1
+      - SECRET_KEY=your-secret-key-change-in-production
+      - PIP_INDEX_URL=https://mirrors.yandex.ru/pypi/simple/
+    restart: unless-stopped
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 77.88.8.8
+
+volumes:
+  taskflow-data:
+    name: taskflow-data
