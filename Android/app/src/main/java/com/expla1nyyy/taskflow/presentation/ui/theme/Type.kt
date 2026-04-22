@@ -1,4 +1,4 @@
-package com.expla1nyyy.taskflow.ui.theme
+package com.expla1nyyy.taskflow.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
