@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
-    @Query("SELECT * FROM tasks WHERE is_completed = 0 ORDER BY due_date ASC")
+    @Query("SELECT * FROM tasks WHERE isCompleted = 0 ORDER BY dueDate ASC")
     fun getActiveTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE is_completed = 1 ORDER BY completion_date DESC")
+    @Query("SELECT * FROM tasks WHERE isCompleted = 1 ORDER BY completionDate DESC")
     fun getCompletedTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM tasks WHERE sync_id = :syncId")
+    @Query("SELECT * FROM tasks WHERE syncId = :syncId")
     suspend fun getTaskBySyncId(syncId: String): Task?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
