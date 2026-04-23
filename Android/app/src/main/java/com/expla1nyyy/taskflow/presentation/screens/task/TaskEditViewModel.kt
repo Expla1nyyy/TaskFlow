@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,6 +93,7 @@ class TaskEditViewModel @Inject constructor(
                 }
             } else {
                 Task(
+                    syncId = UUID.randomUUID().toString(),
                     title = _title.value,
                     description = _description.value,
                     dueDate = _dueDate.value,

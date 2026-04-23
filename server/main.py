@@ -142,21 +142,23 @@ def sync_tasks(
         existing_tasks = db.query(Task).filter(Task.user_id == user.id).all()
         existing_sync_ids = {task.sync_id: task for task in existing_tasks}
         
+        # Создаем словарь для поиска дубликатов по названию и дате
+        existing_by_title_date = {}
+        for task in existing_tasks:
+            key = f"{task.title}_{task.due_date.date()}_{task.due_date.hour}_{task.due_date.minute}"
+            existing_by_title_date[key] = task
+        
         print(f"=== SYNC DEBUG ===")
         print(f"User: {user.username}")
         print(f"Existing tasks in DB: {len(existing_tasks)}")
         print(f"Tasks from client: {len(sync_data.tasks)}")
         
-        for client_task in sync_data.tasks:
-            print(f"  Client task: {client_task.title}, due_date: {client_task.due_date}")
-        
-        client_sync_ids = {task.sync_id for task in sync_data.tasks}
-        
         tasks_updated = 0
         tasks_created = 0
-        tasks_deleted = 0
+        tasks_skipped = 0
         
         for client_task in sync_data.tasks:
+            # Проверяем по sync_id
             if client_task.sync_id in existing_sync_ids:
                 task = existing_sync_ids[client_task.sync_id]
                 task.title = client_task.title
@@ -167,8 +169,28 @@ def sync_tasks(
                 task.notes = client_task.notes
                 task.completion_date = client_task.completion_date
                 tasks_updated += 1
-                print(f"  -> UPDATED: {client_task.title}, due_date: {task.due_date}")
+                print(f"  -> UPDATED by sync_id: {client_task.title}")
+                continue
+            
+            # Проверяем по названию и дате (поиск дубликатов)
+            task_key = f"{client_task.title}_{client_task.due_date.date()}_{client_task.due_date.hour}_{client_task.due_date.minute}"
+            
+            if task_key in existing_by_title_date:
+                # Нашли дубликат - обновляем существующую задачу и присваиваем ей sync_id клиента
+                existing_task = existing_by_title_date[task_key]
+                existing_task.title = client_task.title
+                existing_task.description = client_task.description
+                existing_task.due_date = client_task.due_date
+                existing_task.is_completed = client_task.is_completed
+                existing_task.is_important = client_task.is_important
+                existing_task.notes = client_task.notes
+                existing_task.completion_date = client_task.completion_date
+                # Важно: сохраняем sync_id клиента для будущих синхронизаций
+                existing_task.sync_id = client_task.sync_id
+                tasks_updated += 1
+                print(f"  -> UPDATED by title/date (duplicate found): {client_task.title}")
             else:
+                # Создаем новую задачу
                 task = Task(
                     user_id=user.id,
                     title=client_task.title,
@@ -183,22 +205,16 @@ def sync_tasks(
                 )
                 db.add(task)
                 tasks_created += 1
-                print(f"  -> CREATED: {client_task.title}, due_date: {task.due_date}")
-        
-        for sync_id, task in existing_sync_ids.items():
-            if sync_id not in client_sync_ids:
-                db.delete(task)
-                tasks_deleted += 1
-                print(f"  -> DELETED: {task.title}")
+                print(f"  -> CREATED: {client_task.title}")
         
         db.commit()
         
-        print(f"=== SYNC RESULT: {tasks_updated} updated, {tasks_created} created, {tasks_deleted} deleted ===")
+        print(f"=== SYNC RESULT: {tasks_updated} updated, {tasks_created} created, {tasks_skipped} skipped ===")
         
         updated_tasks = db.query(Task).filter(Task.user_id == user.id).all()
         
         for task in updated_tasks:
-            print(f"  Server task after sync: {task.title}, due_date: {task.due_date}")
+            print(f"  Server task after sync: {task.title}, sync_id: {task.sync_id}, due_date: {task.due_date}")
         
         return SyncResponse(
             tasks=updated_tasks,
@@ -211,6 +227,7 @@ def sync_tasks(
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
+    
 
 @app.get("/api/tasks", response_model=List[TaskResponse])
 def get_tasks(authorization: Optional[str] = Header(None), db: Session = Depends(get_db_session)):

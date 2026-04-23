@@ -4,12 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.util.Date
+import java.util.UUID
 
 @Entity(tableName = "tasks")
 data class Task(
     @PrimaryKey
     @SerializedName("sync_id")
-    val syncId: String = "",
+    val syncId: String = UUID.randomUUID().toString(),
 
     @SerializedName("title")
     var title: String = "",

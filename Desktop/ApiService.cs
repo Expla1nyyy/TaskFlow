@@ -199,7 +199,7 @@ namespace TaskFlow
                 System.Diagnostics.Debug.WriteLine($"=== SENDING {validTasks.Count} TASKS ===");
                 foreach (var task in validTasks)
                 {
-                    System.Diagnostics.Debug.WriteLine($"  Task: {task.Title}, DueDate: {task.DueDate:yyyy-MM-dd HH:mm:ss}");
+                    System.Diagnostics.Debug.WriteLine($"  Task: {task.Title}, SyncId: {task.SyncId}, DueDate: {task.DueDate:yyyy-MM-dd HH:mm:ss}");
                 }
 
                 var tasksForSync = new List<object>();
@@ -215,7 +215,7 @@ namespace TaskFlow
                         is_completed = task.IsCompleted,
                         is_important = task.IsImportant,
                         notes = task.Notes ?? "",
-                        sync_id = task.SyncId
+                        sync_id = task.SyncId  // ВАЖНО: отправляем существующий sync_id
                     };
                     tasksForSync.Add(taskData);
                 }
@@ -251,7 +251,7 @@ namespace TaskFlow
                         System.Diagnostics.Debug.WriteLine($"=== RECEIVED {result.tasks.Count} TASKS ===");
                         foreach (var task in result.tasks)
                         {
-                            System.Diagnostics.Debug.WriteLine($"  Task: {task.Title}, DueDate: {task.DueDate:yyyy-MM-dd HH:mm:ss}");
+                            System.Diagnostics.Debug.WriteLine($"  Task: {task.Title}, SyncId: {task.SyncId}, DueDate: {task.DueDate:yyyy-MM-dd HH:mm:ss}");
                         }
                         return (true, result.tasks);
                     }
