@@ -6,6 +6,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>res\app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="res\app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="res\app.ico" />
+  </ItemGroup>
 
 </Project>
