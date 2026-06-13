@@ -80,24 +80,7 @@ namespace TaskFlow
             {
                 if (_settings != null)
                 {
-                    var resources = Application.Current.Resources;
-
-                    if (_settings.IsDarkTheme)
-                    {
-                        resources["BackgroundBrush"] = new SolidColorBrush(Color.FromRgb(45, 45, 45));
-                        resources["CardBackground"] = new SolidColorBrush(Color.FromRgb(30, 30, 30));
-                        resources["TextColor"] = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                        resources["SecondaryText"] = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-                        resources["BorderColor"] = new SolidColorBrush(Color.FromRgb(70, 70, 70));
-                    }
-                    else
-                    {
-                        resources["BackgroundBrush"] = new SolidColorBrush(Color.FromRgb(245, 245, 245));
-                        resources["CardBackground"] = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                        resources["TextColor"] = new SolidColorBrush(Color.FromRgb(51, 51, 51));
-                        resources["SecondaryText"] = new SolidColorBrush(Color.FromRgb(102, 102, 102));
-                        resources["BorderColor"] = new SolidColorBrush(Color.FromRgb(224, 224, 224));
-                    }
+                    App.ApplyTheme(_settings.IsDarkTheme);
                 }
             }
             catch (Exception ex)

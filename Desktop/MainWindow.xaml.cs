@@ -119,24 +119,13 @@ namespace TaskFlow
 
         private void ApplyTheme(bool isDark)
         {
-            var resources = Application.Current.Resources;
-
+            App.ApplyTheme(isDark);
             if (isDark)
             {
-                resources["BackgroundBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(18, 18, 18));
-                resources["CardBackground"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(30, 30, 30));
-                resources["TextColor"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-                resources["SecondaryText"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(180, 180, 180));
-                resources["BorderColor"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(60, 60, 60));
                 if (btnTheme != null) btnTheme.Content = "☀️ светлая";
             }
             else
             {
-                resources["BackgroundBrush"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(245, 245, 245));
-                resources["CardBackground"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 255, 255));
-                resources["TextColor"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(51, 51, 51));
-                resources["SecondaryText"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(102, 102, 102));
-                resources["BorderColor"] = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(224, 224, 224));
                 if (btnTheme != null) btnTheme.Content = "🌙 темная";
             }
         }
@@ -323,7 +312,7 @@ namespace TaskFlow
                 else
                 {
                     if (showMessages)
-                        MessageBox.Show("Ошибка синхронизации. Проверьте подключение к серверу.", "Ошибка",
+                        MessageBox.Show("Ошибка синхронизации", "Ошибка",
                             MessageBoxButton.OK, MessageBoxImage.Error);
                     return false;
                 }

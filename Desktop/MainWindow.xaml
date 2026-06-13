@@ -12,16 +12,8 @@
         ResizeMode="CanMinimize">
 
     <Window.Resources>
-        <!-- Цвета -->
-        <SolidColorBrush x:Key="PrimaryColor" Color="#2196F3"/>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#F5F5F5"/>
-        <SolidColorBrush x:Key="CardBackground" Color="#FFFFFF"/>
-        <SolidColorBrush x:Key="TextColor" Color="#333333"/>
-        <SolidColorBrush x:Key="SecondaryText" Color="#666666"/>
-        <SolidColorBrush x:Key="BorderColor" Color="#E0E0E0"/>
-        <SolidColorBrush x:Key="ImportantColor" Color="#FF9800"/>
-        <SolidColorBrush x:Key="CompletedColor" Color="#4CAF50"/>
 
+        
         <!-- Стили -->
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
@@ -304,6 +296,7 @@
                                             <TextBlock Text="{Binding Title}" 
                                                        FontSize="13"
                                                        FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextColor}"
                                                        TextWrapping="Wrap"
                                                        MaxHeight="40"
                                                        Margin="0,0,0,5"/>
@@ -488,6 +481,9 @@
                                      AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
                                      MinHeight="150"
+                                     Background="{DynamicResource CardBackground}"
+                                     Foreground="{DynamicResource TextColor}"
+                                     CaretBrush="{DynamicResource TextColor}"
                                      BorderBrush="{DynamicResource BorderColor}"
                                      BorderThickness="1"
                                      Padding="10"
