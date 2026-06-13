@@ -27,7 +27,6 @@ fun AuthScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var regUsername by remember { mutableStateOf("") }
-    var regEmail by remember { mutableStateOf("") }
     var regPassword by remember { mutableStateOf("") }
     var regConfirmPassword by remember { mutableStateOf("") }
     var recoveryWord by remember { mutableStateOf("") }
@@ -159,15 +158,6 @@ fun AuthScreen(
                         singleLine = true
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    OutlinedTextField(
-                        value = regEmail,
-                        onValueChange = { regEmail = it },
-                        label = { Text("Email") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -207,13 +197,12 @@ fun AuthScreen(
                         onClick = {
                             when {
                                 regUsername.isBlank() -> regError = "Введите имя пользователя"
-                                regEmail.isBlank() -> regError = "Введите email"
                                 regPassword.isBlank() -> regError = "Введите пароль"
                                 regPassword != regConfirmPassword -> regError = "Пароли не совпадают"
                                 recoveryWord.isBlank() -> regError = "Введите кодовое слово"
                                 else -> {
                                     regError = null
-                                    authViewModel.register(regUsername, regEmail, regPassword, recoveryWord)
+                                    authViewModel.register(regUsername, regPassword, recoveryWord)
                                 }
                             }
                         },

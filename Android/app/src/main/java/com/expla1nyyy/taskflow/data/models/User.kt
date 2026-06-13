@@ -4,8 +4,7 @@ import java.util.Date
 
 data class User(
     val id: Int,
-    val username: String,
-    val email: String
+    val username: String
 )
 
 data class LoginRequest(
@@ -22,7 +21,6 @@ data class LoginResponse(
 
 data class RegisterRequest(
     val username: String,
-    val email: String,
     val password: String,
     val recovery_word: String
 )

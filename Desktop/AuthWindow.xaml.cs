@@ -133,7 +133,6 @@ namespace TaskFlow
         private async void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtRegUsername.Text) ||
-                string.IsNullOrWhiteSpace(txtRegEmail.Text) ||
                 string.IsNullOrWhiteSpace(txtRegPassword.Password) ||
                 string.IsNullOrWhiteSpace(txtRegConfirmPassword.Password) ||
                 string.IsNullOrWhiteSpace(txtRecoveryWord.Text))
@@ -158,7 +157,6 @@ namespace TaskFlow
 
                 var (success, message) = await _apiService.Register(
                     txtRegUsername.Text,
-                    txtRegEmail.Text,
                     txtRegPassword.Password,
                     txtRecoveryWord.Text
                 );

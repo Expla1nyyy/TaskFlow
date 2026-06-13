@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Text.Json.Serialization;
 
 namespace TaskFlow
 {
@@ -31,18 +32,21 @@ namespace TaskFlow
             isSynced = false;
         }
 
+        [JsonPropertyName("title")]
         public string Title
         {
             get => title ?? "";
             set { title = value; OnPropertyChanged(); }
         }
 
+        [JsonPropertyName("description")]
         public string Description
         {
             get => description ?? "";
             set { description = value; OnPropertyChanged(); }
         }
 
+        [JsonPropertyName("due_date")]
         public DateTime DueDate
         {
             get => dueDate;
@@ -54,68 +58,75 @@ namespace TaskFlow
             }
         }
 
-        public string DueTime => DueDate.ToString("HH:mm", CultureInfo.InvariantCulture);
+        public string DueTime => DueDate.ToString("HH:mm");
 
+        [JsonPropertyName("created_date")]
         public DateTime CreatedDate
         {
             get => createdDate;
-            set { createdDate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CreatedTime)); }
+            set
+            {
+                createdDate = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CreatedTime));
+            }
         }
 
-        public string CreatedTime => CreatedDate.ToString("HH:mm", CultureInfo.InvariantCulture);
+        public string CreatedTime => CreatedDate.ToString("HH:mm");
 
+        [JsonPropertyName("completion_date")]
         public DateTime CompletionDate
         {
             get => completionDate;
-            set { completionDate = value; OnPropertyChanged(); OnPropertyChanged(nameof(CompletionTime)); }
+            set { completionDate = value; OnPropertyChanged(); }
         }
 
-        public string CompletionTime => CompletionDate.ToString("HH:mm", CultureInfo.InvariantCulture);
-
+        [JsonPropertyName("is_completed")]
         public bool IsCompleted
         {
             get => isCompleted;
             set { isCompleted = value; OnPropertyChanged(); }
         }
 
+        [JsonPropertyName("is_important")]
         public bool IsImportant
         {
             get => isImportant;
             set { isImportant = value; OnPropertyChanged(); }
         }
 
+        [JsonPropertyName("notes")]
         public string Notes
         {
             get => notes ?? "";
             set { notes = value; OnPropertyChanged(); }
         }
 
+        public ICommand CompleteCommand
+        {
+            get => completeCommand;
+            set { completeCommand = value; OnPropertyChanged(); }
+        }
+
+        [JsonPropertyName("sync_id")]
         public string SyncId
         {
-            get => syncId ?? Guid.NewGuid().ToString();
+            get
+            {
+                if (string.IsNullOrEmpty(syncId))
+                {
+                    syncId = Guid.NewGuid().ToString();
+                }
+                return syncId;
+            }
             set { syncId = value; OnPropertyChanged(); }
         }
 
+        [JsonPropertyName("is_synced")]
         public bool IsSynced
         {
             get => isSynced;
             set { isSynced = value; OnPropertyChanged(); }
-        }
-
-        public ICommand CompleteCommand
-        {
-            get
-            {
-                return completeCommand ??= new RelayCommand(
-                    param => CompleteTask(),
-                    param => !IsCompleted);
-            }
-        }
-
-        private void CompleteTask()
-        {
-            IsCompleted = true;
-            CompletionDate = DateTime.Now;
         }
 
         #region INotifyPropertyChanged
@@ -128,27 +139,5 @@ namespace TaskFlow
         }
 
         #endregion
-    }
-
-    public class RelayCommand : ICommand
-    {
-        private readonly Action<object> execute;
-        private readonly Predicate<object> canExecute;
-
-        public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
-        {
-            this.execute = execute ?? throw new ArgumentNullException(nameof(execute));
-            this.canExecute = canExecute;
-        }
-
-        public bool CanExecute(object parameter) => canExecute?.Invoke(parameter) ?? true;
-
-        public void Execute(object parameter) => execute(parameter);
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
     }
 }

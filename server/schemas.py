@@ -19,15 +19,15 @@ class TaskCreate(TaskBase):
 class TaskResponse(TaskBase):
     id: int
     user_id: int
-    
+
     class Config:
         from_attributes = True
 
 class UserBase(BaseModel):
     username: str
-    email: str
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    username: str
     password: str
     recovery_word: str
 
@@ -40,10 +40,11 @@ class UserRecovery(BaseModel):
     recovery_word: str
     new_password: str
 
-class UserResponse(UserBase):
+class UserResponse(BaseModel):
     id: int
+    username: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 

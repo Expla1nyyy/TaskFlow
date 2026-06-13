@@ -113,11 +113,11 @@ namespace TaskFlow
             return (false, null);
         }
 
-        public async Task<(bool success, string message)> Register(string username, string email, string password, string recoveryWord)
+        public async Task<(bool success, string message)> Register(string username, string password, string recoveryWord)
         {
             try
             {
-                var registerData = new { username, email, password, recovery_word = recoveryWord };
+                var registerData = new { username, password, recovery_word = recoveryWord };
                 var content = new StringContent(
                     JsonSerializer.Serialize(registerData),
                     Encoding.UTF8,
@@ -303,6 +303,5 @@ namespace TaskFlow
     {
         public int id { get; set; }
         public string username { get; set; }
-        public string email { get; set; }
     }
 }

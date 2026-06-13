@@ -47,9 +47,9 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun register(username: String, email: String, password: String, recoveryWord: String): Result<Unit> {
+    suspend fun register(username: String, password: String, recoveryWord: String): Result<Unit> {
         return try {
-            apiService.register(RegisterRequest(username, email, password, recoveryWord))
+            apiService.register(RegisterRequest(username, password, recoveryWord))
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)

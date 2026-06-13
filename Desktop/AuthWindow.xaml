@@ -177,13 +177,6 @@
 					<TextBox x:Name="txtRegUsername"
                              Margin="0,0,0,15"/>
 
-					<TextBlock Text="Email:"
-                               FontWeight="SemiBold"
-                               Foreground="#333333"
-                               Margin="0,0,0,5"/>
-					<TextBox x:Name="txtRegEmail"
-                             Margin="0,0,0,15"/>
-
 					<TextBlock Text="Пароль:"
                                FontWeight="SemiBold"
                                Foreground="#333333"

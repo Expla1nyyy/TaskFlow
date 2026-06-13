@@ -60,7 +60,6 @@ class TaskRepository @Inject constructor(
     suspend fun syncWithServer(token: String): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                // Сначала чистим дубликаты локально
                 cleanupDuplicates()
 
                 val activeTasksList = taskDao.getActiveTasks().first()

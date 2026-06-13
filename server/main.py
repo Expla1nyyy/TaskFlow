@@ -142,10 +142,10 @@ def sync_tasks(
         existing_tasks = db.query(Task).filter(Task.user_id == user.id).all()
         existing_sync_ids = {task.sync_id: task for task in existing_tasks}
         
-        # Создаем словарь для поиска дубликатов по названию и дате
+        # Создаем словарь для поиска дубликатов по названию и дате (игнорируем часы для защиты от часовых поясов)
         existing_by_title_date = {}
         for task in existing_tasks:
-            key = f"{task.title}_{task.due_date.date()}_{task.due_date.hour}_{task.due_date.minute}"
+            key = f"{task.title}_{task.due_date.date()}"
             existing_by_title_date[key] = task
         
         print(f"=== SYNC DEBUG ===")
@@ -173,7 +173,7 @@ def sync_tasks(
                 continue
             
             # Проверяем по названию и дате (поиск дубликатов)
-            task_key = f"{client_task.title}_{client_task.due_date.date()}_{client_task.due_date.hour}_{client_task.due_date.minute}"
+            task_key = f"{client_task.title}_{client_task.due_date.date()}"
             
             if task_key in existing_by_title_date:
                 # Нашли дубликат - обновляем существующую задачу и присваиваем ей sync_id клиента
